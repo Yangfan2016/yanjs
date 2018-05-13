@@ -1,6 +1,6 @@
 {
   "name": "yanjs",
-  "version": "1.9.6",
+  "version": "1.9.7",
   "description": "This is just a common toolkit for the Front End",
   "main": "dist/Yan.esm.js",
   "directories": {
