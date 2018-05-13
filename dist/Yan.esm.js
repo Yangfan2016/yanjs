@@ -1,6 +1,5 @@
 /**
  *  @Name: Yan.js
- *  @Version: 1.9.5
  *  @Author: Yangfan
  *  @Ctime: 2017-11-27
  *  @Ptime: 2018-05-10

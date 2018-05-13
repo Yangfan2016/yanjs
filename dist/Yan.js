@@ -1,10 +1,9 @@
 /**
  *  @Name: Yan.js
- *  @Version: 1.9.5
  *  @Author: Yangfan
  *  @Ctime: 2017-11-27
  *  @Ptime: 2018-05-10
- *  @Update: 2018-05-12
+ *  @Update: 2018-05-13
  *  @Ref: 1. docCookie (https://developer.mozilla.org/en-US/docs/DOM/document.cookie LICENSE:GPL3.0+)
  *        2. axios (https://github.com/axios/axios LICENSE:MIT)
  *  @License: Released under the MIT License.
@@ -14,7 +13,7 @@
 (function (global, factory) {
     if (typeof define === 'function' && define.amd) {
         // AMD
-        define(factory);
+        define(["https://unpkg.com/axios/dist/axios.min.js"],factory);
     }
     else if (typeof exports === 'object' && typeof module !== 'undefined') {
         // CommonJS [TODO SUPPORT Nodejs]
@@ -22,9 +21,9 @@
     }
     else {
         // window
-        global.Yan=factory();
+        global.Yan=factory(axios);
     }
-}(this, function () {
+}(this, function (axios) {
 
     //*******************GLOBAL_VAR*********************
     var MIMETYPE = {

@@ -1,4 +1,4 @@
-# Yan前端公共方法工具集
+# Yan.js 前端公共方法工具集
 
 > This is just a common toolkit for the Front End
 
@@ -14,12 +14,24 @@
 ```bash
 npm install yanjs
 ```
-## script标签引入
+
+## AMD
 
 ```html
-<script src="https://github.com/Yangfan2016/yanjs/tree/master/dist/yan.js"></script>
+<script src="https://unpkg.com/requirejs/require.js"></script>
+<script>
+    requirejs(["https://unpkg.com/yanjs/dist/Yan.min.js"],function (Yan) {
+        // todo
+    });
+</script>
 ```
 
+## CDN
+
+```html
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/yanjs/dist/Yan.min.js"></script>
+```
 
 ## 快速使用
 - 提示框
