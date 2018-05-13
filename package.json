@@ -18,8 +18,7 @@
     "lib"
   ],
   "dependencies": {
-    "axios": "^0.18.0",
-    "yan-com": "^1.9.5"
+    "axios": "^0.18.0"
   },
   "author": "Yangfan",
   "license": "ISC",
