@@ -1,0 +1,30 @@
+{
+  "name": "yanjs",
+  "version": "1.9.5",
+  "description": "This is just a common toolkit for the Front End",
+  "main": "dist/Yan.esm.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yangfan2016/yanjs.git"
+  },
+  "keywords": [
+    "js",
+    "lib"
+  ],
+  "dependencies": {
+    "axios": "^0.18.0",
+    "yan-com": "^1.9.5"
+  },
+  "author": "Yangfan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yangfan2016/yanjs/issues"
+  },
+  "homepage": "https://github.com/Yangfan2016/yanjs#readme"
+}
