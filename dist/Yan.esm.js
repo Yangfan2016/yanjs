@@ -3,7 +3,7 @@
  *  @Author: Yangfan
  *  @Ctime: 2017-11-27
  *  @Ptime: 2018-05-10
- *  @Update: 2018-05-12
+ *  @Update: 2018-05-17
  *  @Ref: 1. docCookie (https://developer.mozilla.org/en-US/docs/DOM/document.cookie LICENSE:GPL3.0+)
  *        2. axios (https://github.com/axios/axios LICENSE:MIT)
  *  @License: Released under the MIT License.
@@ -1223,7 +1223,10 @@ const factory=function () {
         }
         // 端口
         port = /:(\d+)/g.exec(host);
-        port = !!port ? port[1] : ""; // 81
+        port = !!port ? port[1] :({
+            http:80,
+            https:443
+        })[protocol] || ""; // 81
         // 域名
         hostname = host.replace(":" + port, ""); // nodejs.org
         // 去除
