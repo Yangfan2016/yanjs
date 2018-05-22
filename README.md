@@ -2,6 +2,10 @@
 
 > This is just a common toolkit for the Front End
 
+[![](https://img.shields.io/badge/lib-release-brightgreen.svg)](https://www.npmjs.com/package/yanjs)
+[![](https://img.shields.io/badge/download-200-yellowgreen.svg)](https://www.npmjs.com/package/yanjs)
+[![](https://img.shields.io/scrutinizer/build/g/filp/whoops.svg)](https://www.npmjs.com/package/yanjs)
+
 ## 前言
 
 此库仅仅是聚合了一些常用的前端公共方法
