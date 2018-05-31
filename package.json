@@ -2,7 +2,7 @@
   "name": "yanjs",
   "version": "2.0.2",
   "description": "This is just a common toolkit for the Front End",
-  "main": "dist/Yan.esm.js",
+  "main": "src/Yan.js",
   "directories": {
     "example": "examples"
   },
@@ -19,6 +19,15 @@
   ],
   "dependencies": {
     "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "html-webpack-plugin":"^3.2.0",
+    "babel":"^6.23.0",
+    "babel-core":"^6.26.3",
+    "babel-preset-env":"^1.7.0",
+    "babel-loader": "^7.1.4",
+    "webpack":"^4.8.3",
+    "webpack-cli": "^2.1.3"
   },
   "author": "Yangfan",
   "license": "ISC",

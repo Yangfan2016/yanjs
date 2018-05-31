@@ -10,20 +10,9 @@
  *  @Github: https://github.com/Yangfan2016
  */
 
-(function (global, factory) {
-    if (typeof define === 'function' && define.amd) {
-        // AMD
-        define(["https://unpkg.com/axios/dist/axios.min.js"],factory);
-    }
-    else if (typeof exports === 'object' && typeof module !== 'undefined') {
-        // CommonJS [TODO SUPPORT Nodejs]
-        // module.exports = factory();
-    }
-    else {
-        // window
-        global.Yan=factory(axios);
-    }
-}(this, function (axios) {
+import axios from "axios";
+
+var factory=function (axios) {
 
     //*******************GLOBAL_VAR*********************
     var MIMETYPE = {
@@ -1221,7 +1210,7 @@
         // 去除
         _str = _str.replace(protocol, "");
         // 域名(:端口)?
-        host = /(([^\s\/\?#]+\.)+([^#\?\/]+))/g.exec(_str); // nodejs.org:81 | user:pass@qq.com
+        host = /((^[^\s\/\?#]+\.)+([^#\?\/]+))/g.exec(_str); // nodejs.org:81 | user:pass@qq.com
         host = !!host ? host[1] : "";
         _host = host; // cache 
         // 处理特殊情况 “http://abc:zh@qq.com”
@@ -2064,4 +2053,6 @@
     });
 
     return K;
-}))
+}
+
+export const Yan=factory(axios);
