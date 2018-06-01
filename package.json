@@ -1,13 +1,13 @@
 {
   "name": "yanjs",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "This is just a common toolkit for the Front End",
   "main": "src/Yan.js",
   "directories": {
     "example": "examples"
   },
   "scripts": {
-    "prod":"webpack --progress --config config/webpack.config.js",
+    "prod": "webpack --progress --config config/webpack.config.js",
     "test": "./node_modules/.bin/mocha-phantomjs f2e/index.html"
   },
   "repository": {
