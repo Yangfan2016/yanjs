@@ -8,9 +8,9 @@ module.exports = {
         "Yan":path.resolve(__dirname, '../src/Yan.js')
     },
     output: {
-        path: path.resolve(__dirname, '../build'),
+        path: path.resolve(__dirname, '../dist'),
         filename: '[name].min.js',
-        publicPath: "./build/",
+        publicPath: "./dist/",
         libraryTarget: 'umd'
     },
     // optimization:{

@@ -1,4 +1,4 @@
-# Yan.js 前端公共方法工具集
+# Yan.js 前端公共方法工具集 [TESTING...]
 
 > This is just a common toolkit for the Front End
 
