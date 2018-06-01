@@ -11,8 +11,13 @@ module.exports = {
         path: path.resolve(__dirname, '../build'),
         filename: '[name].min.js',
         publicPath: "./build/",
-        libraryTarget: 'umd'
+        // library:"Yan",
+        libraryTarget: 'umd',
+        umdNamedDefine: true
     },
+    // optimization:{
+    //     minimize:false 
+    // },
     plugins: [
         new HTMLWebpackPlugin({
             filename: path.resolve(__dirname, "../index.html"),

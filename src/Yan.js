@@ -12,7 +12,7 @@
 
 import axios from "axios";
 
-var factory=function (axios) {
+var factory = function (axios) {
 
     //*******************GLOBAL_VAR*********************
     var MIMETYPE = {
@@ -1208,7 +1208,7 @@ var factory=function (axios) {
         protocol = /^(https?):/g.exec(_str);
         protocol = !!protocol ? protocol[1] : ""; // http|https
         // 去除
-        _str = _str.replace(protocol, "");
+        _str = _str.replace(protocol+"://", "");
         // 域名(:端口)?
         host = /((^[^\s\/\?#]+\.)+([^#\?\/]+))/g.exec(_str); // nodejs.org:81 | user:pass@qq.com
         host = !!host ? host[1] : "";
@@ -1223,9 +1223,9 @@ var factory=function (axios) {
         }
         // 端口
         port = /:(\d+)/g.exec(host);
-        port = !!port ? port[1] :({
-            http:80,
-            https:443
+        port = !!port ? +port[1] : ({
+            http: 80,
+            https: 443
         })[protocol] || ""; // 81
         // 域名
         hostname = host.replace(":" + port, ""); // nodejs.org
@@ -2055,4 +2055,4 @@ var factory=function (axios) {
     return K;
 }
 
-export const Yan=factory(axios);
+export const Yan = factory(axios);
