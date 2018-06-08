@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Yangfan2016/yan-compressor.git"
+    "url": "git+https://github.com/Yangfan2016/yanjs.git"
   },
   "keywords": [
-    "compressor",
-    "js"
+    "js",
+    "lib"
   ],
   "dependencies": {
     "axios": "^0.18.0"
