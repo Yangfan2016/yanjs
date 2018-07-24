@@ -3,7 +3,7 @@
  *  @Author: Yangfan
  *  @Ctime: 2017-11-27
  *  @Ptime: 2018-05-10
- *  @Update: 2018-05-17
+ *  @Update: 2018-07-24
  *  @Ref: 1. docCookie (https://developer.mozilla.org/en-US/docs/DOM/document.cookie LICENSE:GPL3.0+)
  *        2. axios (https://github.com/axios/axios LICENSE:MIT)
  *  @License: Released under the MIT License.
@@ -13,7 +13,6 @@
 import axios from "axios";
 
 var factory = function (axios) {
-
     //*******************GLOBAL_VAR*********************
     var MIMETYPE = {
         'doc': 'application/msword',
@@ -48,7 +47,7 @@ var factory = function (axios) {
     _extendDOMPrototype("remove", function () {
         this.parentNode.removeChild(this);
     });
-    // CSS getter and setter [TOTHINK]
+    // CSS getter and setter TOTHINK
     _extendDOMPrototype("getCss", function (prop) {
         return getCssStyle(this, prop);
     });
@@ -298,20 +297,30 @@ var factory = function (axios) {
      * serialize data  e.g. {a:"abc",b:"123"} -> "a=abc&b=123"
      * 
      * @param {Object} data 
-     * @returns {String}
+     * @param {Boolean} isTraditional
+     * @returns {String} 
      */
-    function _serialize(data) {
+    function _serialize(data, isTraditional) {
         var arr = [];
+        var temp = "";
+        isTraditional = typeof isTraditional === "undefined" ? false : isTraditional;
         if (typeof data == "object") {
             for (var key in data) {
                 if (data[key] != null) {
-                    arr.push(encodeURIComponent(key) + "=" + encodeURIComponent(data[key]));
+                    var item = data[key];
+                    if (isTraditional && item instanceof Array) {
+                        arr.push(item.map(function (field) {
+                            return encodeURIComponent(key) + "=" + encodeURIComponent(field);
+                        }).join("&"));
+                    } else {
+                        arr.push(encodeURIComponent(key) + "=" + encodeURIComponent(item));
+                    }
                 }
             }
         }
         // add random param and don't cache
-        arr.push("t=" + Math.floor(Math.random() * 1000 + 1));
-        return data = arr.join("&");
+        //arr.push("t=" + Math.floor(Math.random() * 1000 + 1));
+        return arr.join("&");
     }
 
     /**
@@ -372,12 +381,26 @@ var factory = function (axios) {
     String.prototype.toCamelCase = function () {
         return this.replace(/-(\w{1})/g, function (all, $1) { return $1.toUpperCase() });
     };
+    // pascal-case -> PascalCase
+    String.prototype.toPascalCase=function () {
+        var str=this.toCamelCase();
+        return str[0].toUpperCase()+str.slice(1);
+    };
     // "中文" -> "\u4e2d\u6587"
     String.prototype.toUnicode = function () {
         return this.split("").map(function (char, n) {
             return "\\u" + (char.charCodeAt().toString(16));
         }).join("");
     };
+    // {0}-{1},"A","B" -> "A-B"
+    String.prototype.format = function (strlist) {
+        strlist = strlist instanceof Array ? strlist : [strlist];
+        return this.replace(/\{(-?\d+)\}/g, function (str1,num1) {
+            if (num1<0 ||num1>strlist.length) return "";
+            return strlist[num1];
+        });
+    }; 
+
     // browser
     var browser = {
         isIE: !!window.ActiveXObject || "ActiveXObject" in window,
@@ -589,35 +612,38 @@ var factory = function (axios) {
 
         // justify scoped
         var css = styles[0];
-        var isScoped = false;
-        var version = Date.parse(new Date());
-        if (css.dataset.hasOwnProperty("scoped")) {
-            isScoped = true;
-        }
 
-        // create
-        [].forEach.call(styles, function (style, index) {
-            var s = document.createElement("style");
-            styleRule += style.innerText.replace(/(\n|\t|\r)/g, "");
-            style.remove();
-        });
-        // insert
-        var styleRuleArr = styleRule.split("}");
-        styleRuleArr.forEach(function (rule, eq) {
-            var r = rule && rule.split("{");
-
-            if (rule) {
-                if (isScoped) {
-                    var tpl = parent.getElementsByTagName("template")[0];
-                    [].forEach.call(tpl.content.querySelectorAll(r[0]), function (dom, m) {
-                        dom.dataset["v-" + version] = "";
-                    });
-                    _createCSSStyle(r[0] + "[data-v-" + version + "]", r[1]);
-                } else {
-                    _createCSSStyle(r[0], r[1]);
-                }
+        if (css) {
+            var isScoped = false;
+            var version = Date.parse(new Date());
+            if (css.dataset && css.dataset.hasOwnProperty("scoped")) {
+                isScoped = true;
             }
-        });
+
+            // create
+            [].forEach.call(styles, function (style, index) {
+                var s = document.createElement("style");
+                styleRule += style.innerText.replace(/(\n|\t|\r)/g, "");
+                style.remove();
+            });
+            // insert
+            var styleRuleArr = styleRule.split("}");
+            styleRuleArr.forEach(function (rule, eq) {
+                var r = rule && rule.split("{");
+
+                if (rule) {
+                    if (isScoped) {
+                        var tpl = parent.getElementsByTagName("template")[0];
+                        [].forEach.call(tpl.content.querySelectorAll(r[0]), function (dom, m) {
+                            dom.dataset["v-" + version] = "";
+                        });
+                        _createCSSStyle(r[0] + "[data-v-" + version + "]", r[1]);
+                    } else {
+                        _createCSSStyle(r[0], r[1]);
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -1162,8 +1188,25 @@ var factory = function (axios) {
             AJAX_NATIVE: false, // 默认使用axios三方ajax库
             // ============AUTHENTICATE======================
             makeAuth: function () {
-                // private
-                return {};
+                // detect axios sha1
+                if (_isUndef(window.sha1)) {
+                    _throwError("This library relies on sha1");
+                    return 0;
+                }
+                // AUTH data
+                if (_isUndef(window.__A)) {
+                    _throwError("Please set the authentication header information on page");
+                    return 0;
+                }
+
+                var customHeader = {
+                    timestamp: Date.parse(new Date()) / 1000,
+                    appid: window.__$A__._ID,
+                    appkey: window.__$A__._KEY,
+                };
+                // !!!DON't Commit
+                customHeader.sign = window.sha1("timestamp=" + customHeader.timestamp + "&appid=" + customHeader.appid + "&appkey=" + customHeader.appkey);
+                return customHeader;
             },
         },
         http2: {
@@ -1208,7 +1251,7 @@ var factory = function (axios) {
         protocol = /^(https?):/g.exec(_str);
         protocol = !!protocol ? protocol[1] : ""; // http|https
         // 去除
-        _str = _str.replace(protocol+"://", "");
+        _str = _str.replace(protocol + "://", "");
         // 域名(:端口)?
         host = /((^[^\s\/\?#]+\.)+([^#\?\/]+))/g.exec(_str); // nodejs.org:81 | user:pass@qq.com
         host = !!host ? host[1] : "";
@@ -1261,7 +1304,7 @@ var factory = function (axios) {
             query: query,
             hash: hash,
         };
-    }
+    };
 
     /**
      *  jsonp
@@ -1277,6 +1320,7 @@ var factory = function (axios) {
             error = arguments[2];
         } else { // url,data,success
             if (data) {
+                data.t = ~~(Math.random() * 1000) + 1; // don't cache
                 url += "?" + _serialize(data);
             }
         }
@@ -1427,15 +1471,28 @@ var factory = function (axios) {
         }
         // URL
         config.url = config.url || "/";
-        // GET data->params
-        if (!config.method || config.method.toUpperCase() === "GET") {
+        // GET 
+        config.method = config.method || "GET";
+        if (config.method.toUpperCase() === "GET") {
+            // data -> params
             config.params = config.data;
             delete config.data;
+            // GET tradtional    {a:[1,2]}  => a=1&a=2
+            if (config.traditional === true) {
+                config.paramsSerializer = function (params) {
+                    return _serialize(params, true);
+                };
+            }
         }
         // AUTH
         config.headers = config.headers || {};
         config.isAuth = _isUndef(config.isAuth) ? false : !!config.isAuth;
         config.isAuth && (config.headers["common"] = ajaxCommon.common.makeAuth());
+
+        // assign global setting headers
+        if (ajaxCommon.setting.headers) {
+            config.headers = Object.assign(config.headers, ajaxCommon.setting.headers);
+        }
 
         // CANCEL REQUEST
         var source2 = axios.CancelToken.source();
@@ -1945,12 +2002,14 @@ var factory = function (axios) {
     // ********************Vue comp import and export*********************
     var compLoadEv = document.createEvent("CustomEvent"); // 为了兼容IE11 tmd
     _defineProp(window, "_export", function (data) {
+        window.vueComponent = data; // 为了兼容IE11
         compLoadEv.initCustomEvent("comploaded", true, true, data);
         document.dispatchEvent(compLoadEv);
     });
     _defineProp(window, "_import", function (callback) {
         document.addEventListener("comploaded", function (e) {
-            callback && callback(e.detail);
+            callback && callback(window.vueComponent); // 为了兼容IE11
+            window.vueComponent = null; // 为了兼容IE11
             this.removeEventListener("comploaded", arguments.callee);
         }, false);
     });

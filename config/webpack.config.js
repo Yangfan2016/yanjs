@@ -1,6 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
-const HTMLWebpackPlugin=require("html-webpack-plugin");
 
 module.exports = {
     mode:"production",
@@ -12,13 +10,5 @@ module.exports = {
         filename: '[name].min.js',
         publicPath: "./dist/",
         libraryTarget: 'umd'
-    },
-    // optimization:{
-    //     minimize:false 
-    // },
-    plugins: [
-        // new HTMLWebpackPlugin({
-        //     filename: path.resolve(__dirname, "../index.html"),
-        // })
-    ]
+    }
 };
