@@ -2,7 +2,7 @@
   "name": "yanjs",
   "version": "2.1.0",
   "description": "This is just a common toolkit for the Front End",
-  "main": "src/Yan.js",
+  "main": "dist/Yan.min.js",
   "directories": {
     "example": "examples"
   },
