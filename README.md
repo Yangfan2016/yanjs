@@ -1,42 +1,21 @@
-# Yan.js 前端公共方法工具集 [TESTING...]
+## yanjs ![NPM version](https://img.shields.io/npm/v/yanjs.svg?style=flat)
 
-> This is just a common toolkit for the Front End
-
-[![](https://img.shields.io/badge/lib-release-brightgreen.svg?longCache=true&style=flat-square)](https://www.npmjs.com/package/yanjs)
-[![](https://img.shields.io/badge/download-200-yellowgreen.svg?longCache=true&style=flat-square)](https://www.npmjs.com/package/yanjs)
-
-## 前言
-
+> This is just a common toolkit for the Front End  
 此库仅仅是聚合了一些常用的前端公共方法
-引入文件Yan.js，即可使用
 
-## npm 安装
-
-#### 推荐使用 npm 的方式安装，它能更好地和 webpack 打包工具配合使用
-
+### Installation
 ```bash
-npm install yanjs
+$ npm install yanjs
 ```
 
-## AMD
-
-```html
-<script src="https://unpkg.com/requirejs/require.js"></script>
-<script>
-    requirejs(["https://unpkg.com/yanjs/dist/Yan.min.js"],function (Yan) {
-        // todo
-    });
-</script>
+### Example
+```js
+var yanjs = require('yanjs');
 ```
 
-## CDN
+### API
 
-```html
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="https://unpkg.com/yanjs/dist/Yan.min.js"></script>
-```
-
-## 快速使用
+#### 快速使用
 - 提示框
   - alert
   ```js
@@ -137,7 +116,7 @@ npm install yanjs
   error:function (err) {});
   ```
 
-## 完整配置
+#### 完整配置
 
 > `Yan.$alert(content[ ,callback])`
 <table>
@@ -409,3 +388,23 @@ npm install yanjs
     </tr>
   </tbody>
 <table>
+
+
+### Contributing
+- Fork this Repo first
+- Clone your Repo
+- Install dependencies by `$ npm install`
+- Checkout a feature branch
+- Feel free to add your features
+- Make sure your features are fully tested
+- Publish your local branch, Open a pull request
+- Enjoy hacking <3
+
+### ISC license
+Copyright (c) 2018 Yangfan
+
+
+
+---
+![docor]()
+built upon love by [docor](https://github.com/turingou/docor.git) v0.3.0
