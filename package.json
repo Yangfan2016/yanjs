@@ -35,7 +35,7 @@
     "webpack-cli": "^2.1.3"
   },
   "author": "Yangfan",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Yangfan2016/yanjs/issues"
   },
