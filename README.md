@@ -19,32 +19,32 @@ var yanjs = require('yanjs');
 - 提示框
   - alert
 ```js
-Yan.$alert("提示的内容",function () {
+yan.$alert("提示的内容",function () {
   return "点击确定按钮的回调函数（可选）";
 });
 ```
   - tip
 ```js
-Yan.$tip("普通提示信息","info");
-Yan.$tip("成功提示信息","ok");
-Yan.$tip("失败提示信息","error");
-Yan.$tip("警告提示信息","warn");
+yan.$tip("普通提示信息","info");
+yan.$tip("成功提示信息","ok");
+yan.$tip("失败提示信息","error");
+yan.$tip("警告提示信息","warn");
 ```
   - load
 ```js
 // 全屏loading
-var lay1=Yan.$layer.load(0);
+var lay1=yan.$layer.load(0);
 // 指定区域loading
-var lay2=Yan.$layer.load("#div1");
+var lay2=yan.$layer.load("#div1");
 // 关闭指定loading
-Yan.$layer.close(lay2);
+yan.$layer.close(lay2);
 // 关闭所有loading
-Yan.$layer.closeAll();
+yan.$layer.closeAll();
 ```
 
 - 文件上传
 ```js
-Yan.$file.upload({
+yan.$file.upload({
     el:"#f2", // <input type="file" id="#f2" />
     accept:['img*'], // 文件名后缀
     maxSize:'2M', // 2B 2K 2M 2G,
@@ -65,40 +65,40 @@ Yan.$file.upload({
 
 - base64转换
 ```js
-Yan.$base64.encode("中文abc123"); // "JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"
-Yan.$base64.decode("JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"); // "中文abc123"
+yan.$base64.encode("中文abc123"); // "JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"
+yan.$base64.decode("JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"); // "中文abc123"
 ```
 - 格式转换
 ```js
-Yan.$toThousands("123456789"); // 123,456,789
-Yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWW qq"); // "2018-01-08 03:50:39.02 星期一 01"
-Yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWWW qqqq",new Date(2018,00,02)); // "2018-01-02 12:00:00.00 星期二 01"
+yan.$toThousands("123456789"); // 123,456,789
+yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWW qq"); // "2018-01-08 03:50:39.02 星期一 01"
+yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWWW qqqq",new Date(2018,00,02)); // "2018-01-02 12:00:00.00 星期二 01"
 ```
 
 - Url解析
 ```js
-Yan.$urlParse("http://yanfan.com:83/home/disc/test.html#query?name=yan&age=100"); // {protocol: "http", username: "", password: "", host: "yanfan.com:83", port: "83", …}
+yan.$urlParse("http://yanfan.com:83/home/disc/test.html#query?name=yan&age=100"); // {protocol: "http", username: "", password: "", host: "yanfan.com:83", port: "83", …}
 ```
 
 - 获取、设置、删除cookie
 ```js
 // 判断是否存在此cookie
-Yan.$cookie.hasItem("user_id");
+yan.$cookie.hasItem("user_id");
 // 设置
-Yan.$cookie.setItem("user_id", "12fdsa4f4a", new Date(2018,12,31), "/blog", ".yangfan.com", true);
+yan.$cookie.setItem("user_id", "12fdsa4f4a", new Date(2018,12,31), "/blog", ".yangfan.com", true);
 // 获取
-Yan.$cookie.getItem("user_id");
+yan.$cookie.getItem("user_id");
 // 删除
-Yan.$cookie.removeItem("user_id","/blog",".yangfan.com");
+yan.$cookie.removeItem("user_id","/blog",".yangfan.com");
 // 返回一个这个路径所有可读的cookie的数组
-Yan.$cookie.keys();
+yan.$cookie.keys();
 
 ```
 
 - Ajax
 ```js
 // ajax
-Yan.$http({
+yan.$http({
   url:"yangfan.com/post",
   method:"post",
   data:{
@@ -109,7 +109,7 @@ Yan.$http({
   error:function (err) {}
 });
 // jsonp
-Yan.$http.getJSON("yangfan.com/get",{
+yan.$http.getJSON("yangfan.com/get",{
   name:"jobs",
   age:100
 },success:function (data) {},
@@ -118,7 +118,7 @@ error:function (err) {});
 
 #### 完整配置
 
-> `Yan.$alert(content[ ,callback])`
+> `yan.$alert(content[ ,callback])`
 <table style="width:100%">
   <thead>
     <tr>
@@ -142,7 +142,7 @@ error:function (err) {});
 <table>  
 
 
-> `Yan.$tip(content[ ,type])`
+> `yan.$tip(content[ ,type])`
 <table style="width:100%">
   <thead>
     <tr>
@@ -166,7 +166,7 @@ error:function (err) {});
 <table>
 
 
-> `Yan.$layer.load(el[ ,{shade[ ,time]}])`
+> `yan.$layer.load(el[ ,{shade[ ,time]}])`
 <table style="width:100%">
   <thead>
     <tr>
@@ -195,7 +195,7 @@ error:function (err) {});
 <table>
 
 
-> `Yan.$file.upload({el [,accept[ ,maxSize[ ,previewBox[ ,previewCallBack[ ,onFileChange[ ,acceptError[ ,sizeError]]]]]]]})`
+> `yan.$file.upload({el [,accept[ ,maxSize[ ,previewBox[ ,previewCallBack[ ,onFileChange[ ,acceptError[ ,sizeError]]]]]]]})`
 <table style="width:100%">
   <thead>
     <tr>
@@ -249,11 +249,11 @@ error:function (err) {});
 <table>
 
 
-> `Yan.$cookie.keys()`  
-`Yan.$cookie.hasItem(name)`  
-`Yan.$cookie.getItem(name)`  
-`Yan.$cookie.setItem(name, value[, end[, path[, domain[, secure]]]])`  
-`Yan.$cookie.removeItem(name[, path], domain)`  
+> `yan.$cookie.keys()`  
+`yan.$cookie.hasItem(name)`  
+`yan.$cookie.getItem(name)`  
+`yan.$cookie.setItem(name, value[, end[, path[, domain[, secure]]]])`  
+`yan.$cookie.removeItem(name[, path], domain)`  
 <table style="width:100%">
   <thead>
     <tr>
@@ -297,8 +297,8 @@ error:function (err) {});
 <table>
 
 
-`Yan.$http({url[ ,method[ ,data[ ,responseType[ ,success[ ,error[ ,isAuth[ ,cancelToken[ ,timeout]]]]]]]]})`
-`Yan.$http.getJSON(url,data,success,error);`
+`yan.$http({url[ ,method[ ,data[ ,responseType[ ,success[ ,error[ ,isAuth[ ,cancelToken[ ,timeout]]]]]]]]})`
+`yan.$http.getJSON(url,data,success,error);`
 <table style="width:100%">
   <thead>
     <tr>
@@ -366,7 +366,7 @@ error:function (err) {});
   </tbody>
 <table>
 
-`Yan.$toFormatDate(fmt[ ,date])`
+`yan.$toFormatDate(fmt[ ,date])`
 <table style="width:100%">
   <thead>
     <tr>

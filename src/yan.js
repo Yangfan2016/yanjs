@@ -1188,25 +1188,8 @@ var factory = function (axios) {
             AJAX_NATIVE: false, // 默认使用axios三方ajax库
             // ============AUTHENTICATE======================
             makeAuth: function () {
-                // detect axios sha1
-                if (_isUndef(window.sha1)) {
-                    _throwError("This library relies on sha1");
-                    return 0;
-                }
-                // AUTH data
-                if (_isUndef(window.__A)) {
-                    _throwError("Please set the authentication header information on page");
-                    return 0;
-                }
-
-                var customHeader = {
-                    timestamp: Date.parse(new Date()) / 1000,
-                    appid: window.__$A__._ID,
-                    appkey: window.__$A__._KEY,
-                };
-                // !!!DON't Commit
-                customHeader.sign = window.sha1("timestamp=" + customHeader.timestamp + "&appid=" + customHeader.appid + "&appkey=" + customHeader.appkey);
-                return customHeader;
+                /* private */
+                return {};
             },
         },
         http2: {
@@ -1358,7 +1341,7 @@ var factory = function (axios) {
         var xhr = !_isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new ActiveXObjcet('Microsoft.XMLHTTP')),
             data = config.data || null;
         // async
-        new Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
 
             // init config and default
             config.url = config.url || "/";
@@ -2114,4 +2097,4 @@ var factory = function (axios) {
     return K;
 }
 
-export const Yan = factory(axios);
+export const yan = factory(axios);

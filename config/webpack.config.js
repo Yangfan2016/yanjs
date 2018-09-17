@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
     mode:"production",
     entry: {
-        "Yan":path.resolve(__dirname, '../src/Yan.js')
+        "yan":path.resolve(__dirname, '../src/yan.js')
     },
     output: {
         path: path.resolve(__dirname, '../dist'),

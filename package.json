@@ -2,12 +2,12 @@
   "name": "yanjs",
   "version": "2.1.1",
   "description": "This is just a common toolkit for the Front End",
-  "main": "dist/Yan.min.js",
-  "directories": {
-    "example": "examples"
-  },
+  "main": "dist/yan.min.js",
   "scripts": {
     "prod": "webpack --progress --config config/webpack.config.js",
+    "clean": "rm -rf node_modules/",
+    "tsc":"tsc",
+    "tswp":"tsc && webpack --mode='production' --output-library-target='umd' ./src/core/index.js -o ./dist/yan-lite.min.js",
     "test": "./node_modules/.bin/mocha-phantomjs f2e/index.html"
   },
   "repository": {
@@ -32,7 +32,8 @@
     "mocha": "^5.1.1",
     "mocha-phantomjs": "^4.1.0",
     "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
+    "webpack-cli": "^2.1.3",
+    "typescript": "^3.0.3"
   },
   "author": "Yangfan",
   "license": "MIT",
