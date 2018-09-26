@@ -1,4 +1,4 @@
-import axios from "../../node_modules/axios/index.js";
+import axios from "../node_modules/axios/index.js";
 
 // helpers
 const STRING_OBJECT = "[object Object]";
@@ -124,24 +124,24 @@ function _forEach(context: object, callback: Function): Function {
 
 // extends
 // camel-case -> camelCase
-function toCamelCase(str: string) {
-    return str.replace(/-(\w{1})/g, function (all: string, $1: string) {
-        return $1.toUpperCase()
+function toCamelCase(str:string):string {
+    return str.toLowerCase().replace(/-(\w{1})/g, function (all, $1) {
+        return $1.toUpperCase();
     });
 }
 // pascal-case -> PascalCase
-function toPascalCase(str: string) {
-    let strlist: string = toCamelCase(str);
-    return strlist[0].toUpperCase() + str.slice(1);
+function toPascalCase(str:string):string {
+    let rep = toCamelCase(str);
+    return rep[0].toUpperCase() + rep.slice(1);
 }
 // "中文" -> "\u4e2d\u6587"
-function toUnicode(str: string) {
+function toUnicode(str: string):string {
     return str.split("").map(function (char: string) {
         return "\\u" + (char.charCodeAt(0).toString(16));
     }).join("");
 }
 // {0}-{1},"A","B" -> "A-B"
-function formatStr(str: string, strlist: any) {
+function formatStr(str: string, strlist: any):string {
     let strArr = _isArray(strlist) ? strlist : [strlist];
     return str.replace(/\{(-?\d+)\}/g, function (str1: string, num1: number) {
         if (num1 < 0 || num1 > strArr.length) return "";
@@ -149,21 +149,21 @@ function formatStr(str: string, strlist: any) {
     });
 }
 // encode base64
-function toBase64(str: string) {
+function toBase64(str: string):string {
     if (_isUndef(window.btoa)) {
         _throwError("window.btoa is not defined");
     }
     return window.btoa((window as any).encodeURIComponent(str));
 }
 // decode base64
-function fromBase64(str: string) {
+function fromBase64(str: string):string {
     if (_isUndef(window.atob)) {
         _throwError("window.atob is not defined");
     }
     return (window as any).decodeURIComponent(window.atob(str));
 }
 // 千分位转换法 123456->123,456
-function toThousands(num: number) {
+function toThousands(num: number):string {
     return num.toLocaleString("en-US");
 };
 
@@ -227,7 +227,7 @@ function toFormatDate(fmt: string, date: Date | number | string): string {
         "i+": now.getMinutes(), //分         
         "s+": now.getSeconds(), //秒         
         "q+": Math.floor((now.getMonth() + 3) / 3), //季度         
-        "ms": now.getMilliseconds() //毫秒         
+        "mss": now.getMilliseconds() //毫秒         
     };
     let week: any = {
         "0": "\u65e5",  // 日    
@@ -240,14 +240,24 @@ function toFormatDate(fmt: string, date: Date | number | string): string {
     };
     // 年份和星期特殊处理      
     if (/(Y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (now.getFullYear() + "").substr(4 - RegExp.$1.length));
+        fmt = fmt.replace(RegExp.$1,
+            RegExp.$1.length == 4
+                ? (now.getFullYear() + "")
+                : RegExp.$1.length == 2
+                    ? (now.getFullYear() + "").substr(2) :
+                    (now.getFullYear() + ""));
     }
     if (/(W+)/.test(fmt)) {
         fmt = fmt.replace(RegExp.$1, ((RegExp.$1.length > 1) ? (RegExp.$1.length > 2 ? "\u661f\u671f" : "\u5468") : "") + week[now.getDay() + ""]);
     }
     for (let k in o) {
         if (new RegExp(`(${k})`).test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            fmt = fmt.replace(RegExp.$1,
+                RegExp.$1.length == 2
+                    ? ("" + o[k]).length > 1
+                        ? o[k]
+                        : "0" + o[k]
+                    : o[k]);
         }
     }
     return fmt;
@@ -675,6 +685,10 @@ export let yan = new Yan({
     toBase64,
     fromBase64,
     formatStr,
+    params: {
+        serialize: _serialize,
+        reSerialize: _reSerialize,
+    },
     isIE: browser.isIE,
     browserDetail: browser.detail
 });

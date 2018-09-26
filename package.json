@@ -1,14 +1,13 @@
 {
   "name": "yanjs",
-  "version": "2.1.1",
+  "version": "1.0.0",
   "description": "This is just a common toolkit for the Front End",
+  "private": true,
   "main": "dist/yan.min.js",
   "scripts": {
-    "prod": "webpack --progress --config config/webpack.config.js",
+    "build": "webpack --progress --config webpack.config.js",
     "clean": "rm -rf node_modules/",
-    "tsc":"tsc",
-    "tswp":"tsc && webpack --mode='production' --output-library-target='umd' ./src/core/index.js -o ./dist/yan-lite.min.js",
-    "test": "./node_modules/.bin/mocha-phantomjs f2e/index.html"
+    "test": "mocha-phantomjs --path ./node_modules/.bin/phantomjs ./test/index.html"
   },
   "repository": {
     "type": "git",
@@ -22,23 +21,22 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.2",
+    "typescript": "^3.0.3",
+    "ts-loader": "^5.1.1",
+    "mocha": "^5.2.0",
     "chai": "^4.1.2",
-    "html-webpack-plugin": "^3.2.0",
-    "jsdom": "^11.10.0",
-    "mocha": "^5.1.1",
-    "mocha-phantomjs": "^4.1.0",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3",
-    "typescript": "^3.0.3"
+    "phantomjs-prebuilt":"^2.1.16",
+    "mocha-phantomjs":"^4.1.0"
   },
   "author": "Yangfan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Yangfan2016/yanjs/issues"
   },
-  "homepage": "https://github.com/Yangfan2016/yanjs#readme"
+  "homepage": "https://github.com/Yangfan2016/yanjs/tree/dev#dev"
 }
