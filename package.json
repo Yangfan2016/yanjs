@@ -1,8 +1,7 @@
 {
   "name": "yanjs",
-  "version": "1.0.0",
+  "version": "2.1.1",
   "description": "This is just a common toolkit for the Front End",
-  "private": true,
   "main": "dist/yan.min.js",
   "scripts": {
     "build": "webpack --progress --config webpack.config.js",
