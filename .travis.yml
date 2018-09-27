@@ -1,1 +1,5 @@
-language: javascript
+language: node_js
+node_js:
+  - "10.6.0"
+install: yarn install
+script: yarn run test
