@@ -1,4 +1,4 @@
-## yanjs ![NPM version](https://img.shields.io/npm/v/yanjs.svg?style=flat)
+## yanjs ![NPM version](https://img.shields.io/npm/v/yanjs.svg?style=flat) [![Build Status](https://travis-ci.org/Yangfan2016/yanjs.svg?branch=master)](https://travis-ci.org/Yangfan2016/yanjs)
 
 > This is just a common toolkit for the Front End  
 此库仅仅是聚合了一些常用的前端公共方法
