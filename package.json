@@ -1,14 +1,13 @@
 {
   "name": "yanjs",
-  "version": "2.1.1",
+  "version": "1.0.0",
   "description": "This is just a common toolkit for the Front End",
+  "private": true,
   "main": "dist/yan.min.js",
-  "module": "src/index.js",
   "scripts": {
-    "build": "webpack --progress --config ./webpack.config.js",
+    "build": "webpack --progress --config webpack.config.js",
     "clean": "rm -rf node_modules/",
-    "test": "mocha-phantomjs --path ./node_modules/.bin/phantomjs ./test/index.html",
-    "init":"mocha init ./test"
+    "test": "mocha-phantomjs --path ./node_modules/.bin/phantomjs ./test/index.html"
   },
   "repository": {
     "type": "git",
@@ -32,12 +31,13 @@
     "mocha": "^5.2.0",
     "chai": "^4.1.2",
     "phantomjs-prebuilt":"^2.1.16",
-    "mocha-phantomjs":"^4.1.0"
+    "mocha-phantomjs":"^4.1.0",
+    "es6-promise":"^4.2.5"
   },
   "author": "Yangfan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Yangfan2016/yanjs/issues"
   },
-  "homepage": "https://github.com/Yangfan2016/yanjs#readme"
+  "homepage": "https://github.com/Yangfan2016/yanjs/tree/dev#dev"
 }

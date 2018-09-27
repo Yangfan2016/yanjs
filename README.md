@@ -16,89 +16,65 @@ var yanjs = require('yanjs');
 ### API
 
 #### 快速使用
-- 提示框
-  - alert
-```js
-yan.$alert("提示的内容",function () {
-  return "点击确定按钮的回调函数（可选）";
-});
-```
-  - tip
-```js
-yan.$tip("普通提示信息","info");
-yan.$tip("成功提示信息","ok");
-yan.$tip("失败提示信息","error");
-yan.$tip("警告提示信息","warn");
-```
-  - load
-```js
-// 全屏loading
-var lay1=yan.$layer.load(0);
-// 指定区域loading
-var lay2=yan.$layer.load("#div1");
-// 关闭指定loading
-yan.$layer.close(lay2);
-// 关闭所有loading
-yan.$layer.closeAll();
-```
-
-- 文件上传
-```js
-yan.$file.upload({
-    el:"#f2", // <input type="file" id="#f2" />
-    accept:['img*'], // 文件名后缀
-    maxSize:'2M', // 2B 2K 2M 2G,
-    onFileChange:function (file) {
-        // file为所选文件的信息
-    },
-    acceptError:function () { // 文件类型不符
-      alert('文件类型不符合！');
-    },
-    sizeError:function (flag) { // 文件大小不符
-      var message=flag==1?"文件超限":"文件为空";
-      alert(message);
-    },
-}).submit(function (context) { // context.file 为需要上传文件的文件信息
-    // 下面写ajax请求
-});
-```
-
 - base64转换
 ```js
-yan.$base64.encode("中文abc123"); // "JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"
-yan.$base64.decode("JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"); // "中文abc123"
+yan.toBase64("中文abc123"); // "JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"
+yan.fromBase64("JUU0JUI4JUFEJUU2JTk2JTg3YWJjMTIz"); // "中文abc123"
 ```
 - 格式转换
 ```js
-yan.$toThousands("123456789"); // 123,456,789
-yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWW qq"); // "2018-01-08 03:50:39.02 星期一 01"
-yan.$toFormatDate("YYYY-MM-DD hh:ii:ss.ms WWWW qqqq",new Date(2018,00,02)); // "2018-01-02 12:00:00.00 星期二 01"
+yan.toThousands(123456789); // 123,456,789
+
+yan.toFormatDate("YYYY-MM-DD hh:ii:ss.mss WWW qq"); // "2018-01-08 03:50:39.102 星期一 01"
+yan.toFormatDate("YYYY-MM-DD hh:ii:ss.mss WWWW qqqq",new Date(2018,00,02)); // "2018-01-02 12:00:00.000 星期二 01"
+
+yan.toCamelCase('background-color'); // "backgroundColor"
+yan.toCamelCase('-webkit-background-image'); // "WebkitBackgroundImage"
+yan.toPascalCase('background-color'); // "BackgroundColor"
+yan.toPascalCase('-webkit-background-image'); // "WebkitBackgroundImage"
+
+yan.toUnicode("你好"); // '\u4f60\u597d'
+
+yan.toByte('2k'); // 2048
+
+yan.formatStr('My name is {0}', 'Yangfan'); // 'My name is Yangfan'
+yan.formatStr("My name is {0}, and I'm {1} years old", ['Yangfan', 24]); // "My name is Yangfan, and I'm 24 years old"
+
 ```
+- 数据序列化
+
+```js
+yan.params.serialize({"name": "Yangfan","age": 24}); // 'name=Yangfan&age=24'
+yan.params.serialize({"name":"Yangfan","fruits":["apple","banana"]}, true); // 'name=Yangfan&fruits=apple&fruits=banana'
+yan.params.reSerialize('name=Yangfan&age=24'); // {"name": "Yangfan","age": "24"}
+yan.params.reSerialize('name=Yangfan&fruits=apple&fruits=banana'); // {"name": "Yangfan","fruits": ["apple", "banana"]}
+```
+
 
 - Url解析
 ```js
-yan.$urlParse("http://yanfan.com:83/home/disc/test.html#query?name=yan&age=100"); // {protocol: "http", username: "", password: "", host: "yanfan.com:83", port: "83", …}
+yan.urlParse("http://yanfan.com:83/home/disc/test.html#query?name=yan&age=100"); // {protocol: "http", username: "", password: "", host: "yanfan.com:83", port: "83", …}
 ```
 
 - 获取、设置、删除cookie
 ```js
 // 判断是否存在此cookie
-yan.$cookie.hasItem("user_id");
+yan.docCookie.hasItem("user_id");
 // 设置
-yan.$cookie.setItem("user_id", "12fdsa4f4a", new Date(2018,12,31), "/blog", ".yangfan.com", true);
+yan.docCookie.setItem("user_id", "12fdsa4f4a", new Date(2018,12,31), "/blog", ".yangfan.com", true);
 // 获取
-yan.$cookie.getItem("user_id");
+yan.docCookie.getItem("user_id");
 // 删除
-yan.$cookie.removeItem("user_id","/blog",".yangfan.com");
+yan.docCookie.removeItem("user_id","/blog",".yangfan.com");
 // 返回一个这个路径所有可读的cookie的数组
-yan.$cookie.keys();
+yan.docCookie.keys();
 
 ```
 
 - Ajax
 ```js
 // ajax
-yan.$http({
+yan.http2({
   url:"yangfan.com/post",
   method:"post",
   data:{
@@ -109,151 +85,28 @@ yan.$http({
   error:function (err) {}
 });
 // jsonp
-yan.$http.getJSON("yangfan.com/get",{
+yan.http2.getJSON("yangfan.com/get",{
   name:"jobs",
   age:100
 },success:function (data) {},
 error:function (err) {});
 ```
 
+- 浏览器
+```js
+yan.isIE; // true | false
+yan.browserDetail; // {name: "chrome", version: "69.0.3497.100"}
+```
+
+
+
 #### 完整配置
 
-> `yan.$alert(content[ ,callback])`
-<table style="width:100%">
-  <thead>
-    <tr>
-      <th>prop</th>
-      <th>value</th>
-      <th>ps</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>content</td>
-      <td>String</td>
-      <td>提示内容</td>
-    </tr>
-    <tr>
-      <td>callback</td>
-      <td>Function</td>
-      <td>点击确定的回调函数</td>
-    </tr>
-  </tbody>
-<table>  
-
-
-> `yan.$tip(content[ ,type])`
-<table style="width:100%">
-  <thead>
-    <tr>
-      <th>prop</th>
-      <th>value</th>
-      <th>ps</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>content</td>
-      <td>String</td>
-      <td>提示内容</td>
-    </tr>
-    <tr>
-      <td>type</td>
-      <td>String("info"|"ok"|"error"|"warn")</td>
-      <td>提示内容的类型，默认为 "info"</td>
-    </tr>
-  </tbody>
-<table>
-
-
-> `yan.$layer.load(el[ ,{shade[ ,time]}])`
-<table style="width:100%">
-  <thead>
-    <tr>
-      <th>prop</th>
-      <th>value</th>
-      <th>ps</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>el</td>
-      <td>String</td>
-      <td>DOMSelector(dom选择器)</td>
-    </tr>
-    <tr>
-      <td>shade</td>
-      <td>Number|String(0-1)</td>
-      <td>遮罩层透明度</td>
-    </tr>
-    <tr>
-      <td>time</td>
-      <td>Number(ms)</td>
-      <td>超时关闭（单位毫秒）</td>
-    </tr>
-  </tbody>
-<table>
-
-
-> `yan.$file.upload({el [,accept[ ,maxSize[ ,previewBox[ ,previewCallBack[ ,onFileChange[ ,acceptError[ ,sizeError]]]]]]]})`
-<table style="width:100%">
-  <thead>
-    <tr>
-      <th>prop</th>
-      <th>value</th>
-      <th>ps</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>el</td>
-      <td>String</td>
-      <td>DOMSelector(dom选择器)</td>
-    </tr>
-    <tr>
-      <td>accept</td>
-      <td>Array</td>
-      <td>文件接受类型 e.g. ["png","jpg"]</td>
-    </tr>
-    <tr>
-      <td>maxSize</td>
-      <td>String("B"|"K"|"M"|"G")</td>
-      <td>文件大小 e.g. "2M"</td>
-    </tr>
-    <tr>
-      <td>previewBox</td>
-      <td>String</td>
-      <td>DOMSelector(dom选择器),存放预览图片的容器</td>
-    </tr>
-    <tr>
-      <td>previewCallBack</td>
-      <td>Function</td>
-      <td>预览图片的回调函数，接受两个参数 （img,data）</td>
-    </tr>
-    <tr>
-      <td>onFileChange</td>
-      <td>Function</td>
-      <td>文件选择改变时的回调函数，接受一个参数 （file）</td>
-    </tr>
-    <tr>
-      <td>acceptError</td>
-      <td>Function</td>
-      <td>文件类型错误的回调</td>
-    </tr>
-    <tr>
-      <td>sizeError</td>
-      <td>Function</td>
-      <td>文件大小错误的回调，接受一个参数 （0：”文件为空“|1：”文件超限“）</td>
-    </tr>
-  </tbody>
-<table>
-
-
-> `yan.$cookie.keys()`  
-`yan.$cookie.hasItem(name)`  
-`yan.$cookie.getItem(name)`  
-`yan.$cookie.setItem(name, value[, end[, path[, domain[, secure]]]])`  
-`yan.$cookie.removeItem(name[, path], domain)`  
+> `yan.docCookie.keys()`  
+`yan.docCookie.hasItem(name)`  
+`yan.docCookie.getItem(name)`  
+`yan.docCookie.setItem(name, value[, end[, path[, domain[, secure]]]])`  
+`yan.docCookie.removeItem(name[, path], domain)`  
 <table style="width:100%">
   <thead>
     <tr>
@@ -297,7 +150,7 @@ error:function (err) {});
 <table>
 
 
-`yan.$http({url[ ,method[ ,data[ ,responseType[ ,success[ ,error[ ,isAuth[ ,cancelToken[ ,timeout]]]]]]]]})`
+`yan.http2({url[ ,method[ ,data[ ,responseType[ ,success[ ,error[ ,isAuth[ ,cancelToken[ ,timeout]]]]]]]]})`
 `yan.$http.getJSON(url,data,success,error);`
 <table style="width:100%">
   <thead>
@@ -366,7 +219,7 @@ error:function (err) {});
   </tbody>
 <table>
 
-`yan.$toFormatDate(fmt[ ,date])`
+`yan.toFormatDate(fmt[ ,date])`
 <table style="width:100%">
   <thead>
     <tr>
@@ -379,7 +232,7 @@ error:function (err) {});
     <tr>
       <td>fmt</td>
       <td>String</td>
-      <td>自定义格式（注意大小写） （“Y”：年，“M”：月，“D”：日，“h”：时，“i”：分，“s”：秒，“ms”：毫秒，“W”：星期，“q”：季度）</td>
+      <td>自定义格式（注意大小写） （“Y”：年，“M”：月，“D”：日，“h”：时，“i”：分，“s”：秒，“mss”：毫秒，“W”：星期，“q”：季度）</td>
     </tr>
     <tr>
       <td>date</td>
