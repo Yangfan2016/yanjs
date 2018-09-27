@@ -25,7 +25,7 @@ $ yarn run test
 ```
 
 ### API
-check this file: `src/indx.ts`
+check this file: `src/index.ts`
 
 ### MIT license
 Copyright (c) 2018 Yangfan
