@@ -1,91 +1,8 @@
 import axios from "../node_modules/axios/index.js";
-
-// helpers
-const STRING_OBJECT = "[object Object]";
-let _toString = Object.prototype.toString;
-
-// extend dom function
-function _extendDOMPrototype(key: string, val: any): void {
-    [
-        HTMLDocument.prototype, // document
-        Element.prototype,  // element
-        CharacterData.prototype, // ? 
-        DocumentType.prototype // ? DOCTYPE
-    ].forEach(function (item) {
-        // prevent repeat add
-        if (item.hasOwnProperty(key)) {
-            return;
-        }
-        Object.defineProperty(item, key, {
-            configurable: true,
-            enumerable: true,
-            writable: true,
-            value: val
-        });
-    });
-}
-
-// get type of variable
-function _getVarType(obj: any): string {
-    return _toString.call(obj).split(" ")[1].slice(0, -1);
-}
-
-function _isUndef(obj: any): boolean {
-    return typeof obj === "undefined";
-}
-
-function _isPlainObject(obj: any): boolean {
-    return _toString.call(obj) === STRING_OBJECT;
-}
-
-function _isFunc(obj: any): boolean {
-    return typeof obj === "function";
-}
-
-function _isArray(obj: any): boolean {
-    return obj instanceof Array;
-}
-// except 'NaN'
-function _isNumber(obj: any): boolean {
-    return obj === +obj;
-}
-
-function _isString(obj: any): boolean {
-    return obj === "" + obj;
-}
-
-function _isBoo(obj: any): boolean {
-    return obj === !!obj;
-}
-
-function _isHTMLElement(obj: any): boolean {
-    return typeof HTMLElement === "object" ? (obj instanceof HTMLElement) : (typeof obj === "object" && obj.nodeType == 1 && typeof obj.nodeName === "string");
-}
-
-// Object.defineProperty
-function _defineProp(o: object, key: string, val: any): void {
-    if (o.hasOwnProperty(key)) {
-        _throwError(`${o} already exists as ${key} property`);
-    }
-    Object.defineProperty(o, key, {
-        value: val
-    });
-}
-// Object.prototype
-function _extendPrototype(o: any, key: string, val: any): void {
-    if (o[key]) {
-        _throwError(`${o} already exists as ${key} property`);
-    }
-    o.prototype[key] = val;
-}
-
-// throw error
-function _throwError(msg: string): never {
-    throw new Error(msg);
-}
+import * as utils from "./utils/index";
+import { browser, docCookie } from "./bom/index";
 
 // serialize data  e.g. {a:"abc",b:"123"} -> "a=abc&b=123"
-
 function _serialize(data: any, isTraditional: boolean = false): string {
     let arr = [];
     if (typeof data == "object") {
@@ -113,7 +30,17 @@ function _reSerialize(str: string): object {
     let data: any = {};
     arr.forEach(function (item) {
         let brr = item.split("=");
-        data[brr[0]] = decodeURIComponent(brr[1]);
+        if (!data[brr[0]]) {
+            data[brr[0]] = decodeURIComponent(brr[1]);
+        } else {
+            var old = data[brr[0]];
+            var nen = decodeURIComponent(brr[1]);
+            if (utils._isArray(old)) {
+                data[brr[0]].push(nen);
+            } else {
+                data[brr[0]] = [old, nen];
+            }
+        }
     });
     return data;
 }
@@ -142,7 +69,7 @@ function toUnicode(str: string): string {
 }
 // {0}-{1},"A","B" -> "A-B"
 function formatStr(str: string, strlist: any): string {
-    let strArr = _isArray(strlist) ? strlist : [strlist];
+    let strArr = utils._isArray(strlist) ? strlist : [strlist];
     return str.replace(/\{(-?\d+)\}/g, function (str1: string, num1: number) {
         if (num1 < 0 || num1 > strArr.length) return "";
         return strArr[num1];
@@ -150,15 +77,15 @@ function formatStr(str: string, strlist: any): string {
 }
 // encode base64
 function toBase64(str: string): string {
-    if (_isUndef(window.btoa)) {
-        _throwError("window.btoa is not defined");
+    if (utils._isUndef(window.btoa)) {
+        utils._throwError("window.btoa is not defined");
     }
     return window.btoa((window as any).encodeURIComponent(str));
 }
 // decode base64
 function fromBase64(str: string): string {
-    if (_isUndef(window.atob)) {
-        _throwError("window.atob is not defined");
+    if (utils._isUndef(window.atob)) {
+        utils._throwError("window.atob is not defined");
     }
     return (window as any).decodeURIComponent(window.atob(str));
 }
@@ -172,21 +99,6 @@ function toThousands(num: number): string {
         return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
     }
 };
-
-// ********************Vue comp import and export*********************
-let compLoadEv = document.createEvent("CustomEvent"); // 为了兼容IE11
-_defineProp(window, "_export", function (data: any) {
-    (window as any).vueComponent = data; // 为了兼容IE11
-    compLoadEv.initCustomEvent("comploaded", true, true, data);
-    document.dispatchEvent(compLoadEv);
-});
-_defineProp(window, "_import", function (callback: any) {
-    document.addEventListener("comploaded", function (this: any) {
-        callback && callback((window as any).vueComponent); // 为了兼容IE11
-        (window as any).vueComponent = null; // 为了兼容IE11
-        this.removeEventListener("comploaded", arguments.callee);
-    }, false);
-});
 
 /**
  * 格式化日期 三方 "YYYY-MM-DD hh:ii:ss.ms W q" | "timestamp"
@@ -207,7 +119,7 @@ function toFormatDate(fmt: string, date: Date | number | string): string {
             date = date.trim();
             date = date.replace(/\/Date\((\d+)\)\//g, "$1"); // "/Date(1519700193000)/"
             // "1519700193000" -> 1519700193000
-            date = _isNumber(date) ? date : +date;
+            date = utils._isNumber(date) ? date : +date;
         } else if (typeof date == "number") {
             date = isNaN(date) ? 0 : date;
         } else {
@@ -287,98 +199,21 @@ function toByte(str: string): number {
     });
 }
 
+// ********************Vue comp import and export*********************
+let compLoadEv = document.createEvent("CustomEvent"); // 为了兼容IE11
+utils._defineProp(window, "_export", function (data: any) {
+    (window as any).vueComponent = data; // 为了兼容IE11
+    compLoadEv.initCustomEvent("comploaded", true, true, data);
+    document.dispatchEvent(compLoadEv);
+});
+utils._defineProp(window, "_import", function (callback: any) {
+    document.addEventListener("comploaded", function (this: any) {
+        callback && callback((window as any).vueComponent); // 为了兼容IE11
+        (window as any).vueComponent = null; // 为了兼容IE11
+        this.removeEventListener("comploaded", arguments.callee);
+    }, false);
+});
 
-// browser
-let browser = {
-    isIE: !!(window as any).ActiveXObject || "ActiveXObject" in window,
-    detail: (function () {
-        let ua = window.navigator.userAgent.toLowerCase();
-        let browser = {};
-        let arrMatch: string[] | null;
-        (arrMatch = ua.match(/msie ([\d\.]+)/)) ? (browser = { name: 'ie', version: arrMatch[1] }) :
-            (arrMatch = ua.match(/opr\/([\d\.]+)/)) ? (browser = { name: 'opera', version: arrMatch[1] }) :
-                (arrMatch = ua.match(/firefox\/([\d\.]+)/)) ? (browser = { name: 'firefox', version: arrMatch[1] }) :
-                    (arrMatch = ua.match(/version\/([\d\.]+).*safari/)) ? (browser = { name: 'safari', version: arrMatch[1] }) :
-                        (arrMatch = ua.match(/chrome\/([\d\.]+)/)) ? (browser = { name: 'chrome', version: arrMatch[1] }) :
-                            (arrMatch = ua.match(/phantomjs\/([\d\.]+)/)) ? (browser = { name: 'phantomjs', version: arrMatch[1] }) :
-                                0;
-        return browser;
-    }()),
-    isSupportCss: function (prop: any): boolean {
-        // convert str to camelCase
-        if (!prop) return false;
-        let str = prop.toCamelCase();
-        let ele = document.getElementsByTagName("div")[0];
-        return str in ele.style;
-    },
-    isSupportCalc: function () {
-        let cache;
-        let ele: any = document.createElement("div");
-        ele.style["width"] = "calc(1px + 1px)";
-        cache = ele.style["width"];
-        ele = null;
-        return cache == "calc(2px)";
-    },
-    isSupportVWVH: function () {
-        let cache;
-        let ele: any = document.createElement("div");
-        ele.style["width"] = "1vw";
-        cache = ele.style["width"];
-        ele = null;
-        return cache == "1vw";
-    }
-};
-
-// dom
-
-/**
- * filter html element tag
- * 
- * @param {String} str 
- * @returns {String}
- */
-function filterHTML(str: string): string {
-    return (str + "").replace(/<\/?([^>]\s?)+>/g, "").trim().replace(/\n|\r|\t/g, "");
-}
-
-// cookie
-let docCookie = {
-    getItem: function (sKey: string) {
-        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
-    },
-    setItem: function (sKey: string, sValue: any, { end, path, domain, isSecure }: any) {
-        if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) { return false; }
-        let sExpires = "";
-        if (end) {
-            switch (end.constructor) {
-                case Number:
-                    sExpires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end;
-                    break;
-                case String:
-                    sExpires = "; expires=" + end;
-                    break;
-                case Date:
-                    sExpires = "; expires=" + end.toUTCString();
-                    break;
-            }
-        }
-        document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "") + (isSecure ? "; secure" : "");
-        return true;
-    },
-    removeItem: function (sKey: string, sPath: string, sDomain: string) {
-        if (!sKey || !this.hasItem(sKey)) { return false; }
-        document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
-        return true;
-    },
-    hasItem: function (sKey: string) {
-        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-    },
-    keys: /* optional method: you can safely remove it! */ function () {
-        let aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
-        for (let nIdx = 0; nIdx < aKeys.length; nIdx++) { aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]); }
-        return aKeys;
-    }
-};
 
 class Yan {
     // ajax setting
@@ -492,12 +327,12 @@ class Yan {
         error = (_: any) => { }
     }) {
 
-        if (_isUndef(Promise)) {
-            _throwError("Your browser didn't support 'Promise'");
+        if (utils._isUndef(Promise)) {
+            utils._throwError("Your browser didn't support 'Promise'");
             return;
         }
         // 1
-        let xhr = !_isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new (window as any).ActiveXObjcet('Microsoft.XMLHTTP'));
+        let xhr = !utils._isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new (window as any).ActiveXObjcet('Microsoft.XMLHTTP'));
         // async
         return new Promise((resolve, reject) => {
 
@@ -573,7 +408,7 @@ class Yan {
     }
     // JSONP
     getJSON(url: string, data: object, success: Function, error: Function) {
-        if (_isFunc(data)) { // url,success
+        if (utils._isFunc(data)) { // url,success
             success = arguments[1];
             error = arguments[2];
         } else { // url,data,success
@@ -602,8 +437,8 @@ class Yan {
     }
     http2(config: any) {
         // detect axios exist
-        if (_isUndef(axios)) {
-            _throwError("This library relies on axios");
+        if (utils._isUndef(axios)) {
+            utils._throwError("This library relies on axios");
             return 0;
         }
         // 没有参数
@@ -611,8 +446,8 @@ class Yan {
             return 0;
         }
         // 参数类型不是对象时或参数不能为空对象
-        if (_getVarType(config) != "Object" || Object.keys(config).length == 0) {
-            _throwError("参数类型不是对象或为空对象");
+        if (utils._getVarType(config) != "Object" || Object.keys(config).length == 0) {
+            utils._throwError("参数类型不是对象或为空对象");
             return 0;
         }
         let that = this;
@@ -671,7 +506,7 @@ class Yan {
             .catch(function (err) {
                 config.complete && config.complete();
                 if (err != "Cancel") { // 取消请求信息不打印
-                    if (_isFunc(config.error) && that.ajaxCommon.setting.isDoErrorCallback) {
+                    if (utils._isFunc(config.error) && that.ajaxCommon.setting.isDoErrorCallback) {
                         config.error(err);
                     } else {
                         console.error(err);

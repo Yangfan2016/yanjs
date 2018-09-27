@@ -216,6 +216,12 @@ describe("params", function () {
                 .have
                 .ownProperty("name")
         });
+        it('name=Yangfan&fruits=apple&fruits=banana', function () {
+            expect(yan.params.reSerialize(str2)["fruits"])
+                .to
+                .have
+                .lengthOf(2)
+        });
     });
 });
 
