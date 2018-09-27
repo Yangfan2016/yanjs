@@ -124,24 +124,24 @@ function _forEach(context: object, callback: Function): Function {
 
 // extends
 // camel-case -> camelCase
-function toCamelCase(str:string):string {
+function toCamelCase(str: string): string {
     return str.toLowerCase().replace(/-(\w{1})/g, function (all, $1) {
         return $1.toUpperCase();
     });
 }
 // pascal-case -> PascalCase
-function toPascalCase(str:string):string {
+function toPascalCase(str: string): string {
     let rep = toCamelCase(str);
     return rep[0].toUpperCase() + rep.slice(1);
 }
 // "中文" -> "\u4e2d\u6587"
-function toUnicode(str: string):string {
+function toUnicode(str: string): string {
     return str.split("").map(function (char: string) {
         return "\\u" + (char.charCodeAt(0).toString(16));
     }).join("");
 }
 // {0}-{1},"A","B" -> "A-B"
-function formatStr(str: string, strlist: any):string {
+function formatStr(str: string, strlist: any): string {
     let strArr = _isArray(strlist) ? strlist : [strlist];
     return str.replace(/\{(-?\d+)\}/g, function (str1: string, num1: number) {
         if (num1 < 0 || num1 > strArr.length) return "";
@@ -149,22 +149,28 @@ function formatStr(str: string, strlist: any):string {
     });
 }
 // encode base64
-function toBase64(str: string):string {
+function toBase64(str: string): string {
     if (_isUndef(window.btoa)) {
         _throwError("window.btoa is not defined");
     }
     return window.btoa((window as any).encodeURIComponent(str));
 }
 // decode base64
-function fromBase64(str: string):string {
+function fromBase64(str: string): string {
     if (_isUndef(window.atob)) {
         _throwError("window.atob is not defined");
     }
     return (window as any).decodeURIComponent(window.atob(str));
 }
 // 千分位转换法 123456->123,456
-function toThousands(num: number):string {
-    return num.toLocaleString("en-US");
+function toThousands(num: number): string {
+    if ((num as any).length < 3) return num.toString();
+    var res = num.toLocaleString("en-US");
+    if (/(,\d{3})+/.test(res)) { // 方案1
+        return res;
+    } else { // 备用方案
+        return num.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+    }
 };
 
 // ********************Vue comp import and export*********************
@@ -293,7 +299,9 @@ let browser = {
             (arrMatch = ua.match(/opr\/([\d\.]+)/)) ? (browser = { name: 'opera', version: arrMatch[1] }) :
                 (arrMatch = ua.match(/firefox\/([\d\.]+)/)) ? (browser = { name: 'firefox', version: arrMatch[1] }) :
                     (arrMatch = ua.match(/version\/([\d\.]+).*safari/)) ? (browser = { name: 'safari', version: arrMatch[1] }) :
-                        (arrMatch = ua.match(/chrome\/([\d\.]+)/)) ? (browser = { name: 'chrome', version: arrMatch[1] }) : 0;
+                        (arrMatch = ua.match(/chrome\/([\d\.]+)/)) ? (browser = { name: 'chrome', version: arrMatch[1] }) :
+                            (arrMatch = ua.match(/phantomjs\/([\d\.]+)/)) ? (browser = { name: 'phantomjs', version: arrMatch[1] }) :
+                                0;
         return browser;
     }()),
     isSupportCss: function (prop: any): boolean {

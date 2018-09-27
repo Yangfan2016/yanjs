@@ -1,77 +1,74 @@
 var expect = chai.expect;
 
 
-describe("urlParse",function () {
-    var url='https://abc.com:8080/user/info?name=yangfan&id=123456#top';
-    var res=yan.urlParse(url);
+describe("urlParse", function () {
+    var url = 'https://abc.com:8080/user/info?name=yangfan&id=123456#top';
+    var res = yan.urlParse(url);
     
-    
-    it("eg: Location"+location,function () {
+    it("eg: Location" + location, function () {
         expect(yan.urlParse(location))
-        .to
-        .have
-        .ownProperty("query")
+            .to
+            .have
+            .ownProperty("query")
     });
 
-    it("eg: string "+url,function () {
+    it("eg: string " + url, function () {
         expect(res)
-        .to
-        .an("object")
+            .to
+            .an("object")
     });
 
-    it("protocol",function () {
+    it("protocol", function () {
         expect(res.protocol)
-        .to
-        .be
-        .equal('https')
+            .to
+            .be
+            .equal('https')
     });
 
-    it("port",function () {
+    it("port", function () {
         expect(res.port)
-        .to
-        .be
-        .equal(8080)
+            .to
+            .be
+            .equal(8080)
     });
 
-    it("host",function () {
+    it("host", function () {
         expect(res.host)
-        .to
-        .be
-        .equal('abc.com:8080')
+            .to
+            .be
+            .equal('abc.com:8080')
     });
 
-    it("hostname",function () {
+    it("hostname", function () {
         expect(res.hostname)
-        .to
-        .be
-        .equal('abc.com')
+            .to
+            .be
+            .equal('abc.com')
     });
 
-    it("pathname",function () {
+    it("pathname", function () {
         expect(res.pathname)
-        .to
-        .be
-        .equal('/user/info')
+            .to
+            .be
+            .equal('/user/info')
     });
 
-    it("hash",function () {
+    it("hash", function () {
         expect(res.hash)
-        .to
-        .be
-        .equal('top')
+            .to
+            .be
+            .equal('top')
     });
 
-    it("query",function () {
+    it("query", function () {
         expect(res.query)
-        .to
-        .have
-        .ownProperty("name")
+            .to
+            .have
+            .ownProperty("name")
     });
 });
 
 describe("toFormatDate", function () {
-    // TEMP
-    return;
     it("number: 1537942141038", function () {
         expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss', 1537942141038))
             .to
@@ -90,12 +87,12 @@ describe("toFormatDate", function () {
             .be
             .equal("2018-09-26 14:09:01")
     });
-    var now = new Date;
+    var now=new Date();
     it("Date: new Date", function () {
-        expect(Date.parse(yan.toFormatDate('YYYY-MM-DD HH:ii:ss:mss', now)))
+        expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss:mss', now))
             .to
             .be
-            .equal(now.getTime())
+            .contain(now.getFullYear()+"")
     });
 });
 
@@ -139,8 +136,6 @@ describe("toUnicode", function () {
 });
 
 describe("toThousands", function () {
-    // TEST
-    return
     it("eg: 123456789", function () {
         expect(yan.toThousands(123456789))
             .to
@@ -227,19 +222,18 @@ describe("params", function () {
     });
 });
 
-describe("browser",function () {
-    it("isIE",function () {
+describe("browser", function () {
+    it("isIE", function () {
         expect(yan.isIE)
-        .to
-        .be
-        .an("boolean")
+            .to
+            .be
+            .an("boolean")
     });
-    // TEST
-    return;
-    it("browserDetail",function () {
+
+    it("browserDetail", function () {
         expect(yan.browserDetail)
-        .to
-        .have
-        .ownProperty("name")
+            .to
+            .have
+            .ownProperty("name")
     });
 });
