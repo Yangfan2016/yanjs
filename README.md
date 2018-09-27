@@ -1,4 +1,4 @@
-## yanjs
+## yanjs [![Build Status](https://travis-ci.org/Yangfan2016/yanjs.svg?branch=dev)](https://travis-ci.org/Yangfan2016/yanjs)
 
 This is just a common toolkit for the Front End
 
