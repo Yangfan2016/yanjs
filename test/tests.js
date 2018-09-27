@@ -84,12 +84,12 @@ describe("toFormatDate", function () {
             .to
             .match(/2018-09-26 14|6:09:01/);
     });
-    var now=new Date();
+    var now = new Date();
     it("Date: new Date", function () {
         expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss:mss', now))
             .to
             .be
-            .contain(now.getFullYear()+"")
+            .contain(now.getFullYear() + "")
     });
 });
 
@@ -232,5 +232,16 @@ describe("browser", function () {
             .to
             .have
             .ownProperty("name")
+    });
+});
+
+describe("ajax", function () {
+    it("get", function () {
+        expect(yan.http({
+            url: "/"
+        }))
+            .to
+            .be
+            .a('promise');
     });
 });
