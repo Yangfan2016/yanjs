@@ -1,6 +1,6 @@
 {
   "name": "yanjs",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "This is just a common toolkit for the Front End",
   "main": "dist/yan.min.js",
   "scripts": {
@@ -29,9 +29,9 @@
     "ts-loader": "^5.1.1",
     "mocha": "^5.2.0",
     "chai": "^4.1.2",
-    "phantomjs-prebuilt":"^2.1.16",
-    "mocha-phantomjs":"^4.1.0",
-    "es6-promise":"^4.2.5"
+    "phantomjs-prebuilt": "^2.1.16",
+    "mocha-phantomjs": "^4.1.0",
+    "es6-promise": "^4.2.5"
   },
   "author": "Yangfan",
   "license": "MIT",
