@@ -1,6 +1,6 @@
 {
   "name": "yanjs",
-  "version": "3.1.0",
+  "version": "3.0.0",
   "description": "This is just a common toolkit for the Front End",
   "main": "dist/yan.min.js",
   "scripts": {
