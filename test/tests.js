@@ -244,10 +244,11 @@ describe("browser", function () {
 describe("ajax", function () {
     it("get", function () {
         expect(yan.http({
-            url: "/"
+            url: "/api"
         }))
             .to
             .be
-            .a('promise');
+            .an
+            .instanceof(Promise);
     });
 });
