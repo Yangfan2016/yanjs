@@ -72,17 +72,17 @@ describe("toFormatDate", function () {
     it("number: 1537942141038", function () {
         expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss', 1537942141038))
             .to
-            .match(/2018-09-26 14|6:09:01/);
+            .match(/2018-09-26 14:09:01/);
     });
     it("string: '1537942141038'", function () {
         expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss', '1537942141038'))
             .to
-            .match(/2018-09-26 14|6:09:01/);
+            .match(/2018-09-26 14:09:01/);
     });
     it("string: '/Date(1537942141038)/'", function () {
         expect(yan.toFormatDate('YYYY-MM-DD HH:ii:ss', '/Date(1537942141038)/'))
             .to
-            .match(/2018-09-26 14|6:09:01/);
+            .match(/2018-09-26 14:09:01/);
     });
     var now = new Date();
     it("Date: new Date", function () {
