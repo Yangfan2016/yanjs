@@ -4,5 +4,7 @@ node_js:
 branches:
   only:
   - master
+before_install:
+    - export TZ='Asia/Shanghai' # 更改时区
 install: yarn install
 script: yarn run test
