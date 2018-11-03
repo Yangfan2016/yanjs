@@ -6,7 +6,8 @@
   "scripts": {
     "build": "webpack --progress --config webpack.config.js",
     "clean": "rm -rf node_modules/",
-    "test": "mocha-phantomjs --path ./node_modules/.bin/phantomjs ./test/index.html"
+    "test": "jest test/yan.test.js --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -21,18 +22,17 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
-    "webpack": "^4.17.2",
-    "webpack-cli": "^3.1.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "babel-loader": "^8.0.2",
-    "typescript": "^3.0.3",
-    "ts-loader": "^5.1.1",
-    "mocha": "^5.2.0",
     "chai": "^4.1.2",
-    "phantomjs-prebuilt": "^2.1.16",
-    "mocha-phantomjs": "^4.1.0",
-    "es6-promise": "^4.2.5"
+    "coveralls": "^3.0.2",
+    "es6-promise": "^4.2.5",
+    "jest": "^23.6.0",
+    "ts-loader": "^5.1.1",
+    "typescript": "^3.0.3",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0"
   },
   "author": "Yangfan",
   "license": "MIT",

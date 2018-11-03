@@ -30,7 +30,9 @@ export let browser = {
                             (arrMatch = ua.match(/chrome\/([\d\.]+)/)) ? (browser = { name: 'chrome', version: arrMatch[1] }) :
                                 // Phantomjs                        
                                 (arrMatch = ua.match(/phantomjs\/([\d\.]+)/)) ? (browser = { name: 'phantomjs', version: arrMatch[1] }) :
-                                    0;
+                                    // jsdom    
+                                    (arrMatch = ua.match(/jsdom\/([\d\.]+)/)) ? (browser = { name: 'jsdom', version: arrMatch[1] }) :
+                                        0;
         return browser;
     }()),
     isSupportCss: function (prop: any): boolean {
