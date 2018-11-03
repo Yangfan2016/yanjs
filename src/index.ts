@@ -1,5 +1,13 @@
 import axios from "../node_modules/axios/index.js";
-import * as utils from "./utils/index";
+import {
+    _isArray,
+    _isUndef,
+    _throwError,
+    _isNumber,
+    _defineProp,
+    _isFunc,
+    _getVarType
+} from "./utils/index";
 import { browser, docCookie } from "./bom/index";
 
 // serialize data  e.g. {a:"abc",b:"123"} -> "a=abc&b=123"
@@ -35,7 +43,7 @@ function _reSerialize(str: string): object {
         } else {
             var old = data[brr[0]];
             var nen = decodeURIComponent(brr[1]);
-            if (utils._isArray(old)) {
+            if (_isArray(old)) {
                 data[brr[0]].push(nen);
             } else {
                 data[brr[0]] = [old, nen];
@@ -43,10 +51,6 @@ function _reSerialize(str: string): object {
         }
     });
     return data;
-}
-
-function _forEach(context: object, callback: Function): Function {
-    return [].forEach.call(context, callback);
 }
 
 // extends
@@ -69,7 +73,7 @@ function toUnicode(str: string): string {
 }
 // {0}-{1},"A","B" -> "A-B"
 function formatStr(str: string, strlist: any): string {
-    let strArr = utils._isArray(strlist) ? strlist : [strlist];
+    let strArr = _isArray(strlist) ? strlist : [strlist];
     return str.replace(/\{(-?\d+)\}/g, function (str1: string, num1: number) {
         if (num1 < 0 || num1 > strArr.length) return "";
         return strArr[num1];
@@ -77,15 +81,15 @@ function formatStr(str: string, strlist: any): string {
 }
 // encode base64
 function toBase64(str: string): string {
-    if (utils._isUndef(window.btoa)) {
-        utils._throwError("window.btoa is not defined");
+    if (_isUndef(window.btoa)) {
+        _throwError("window.btoa is not defined");
     }
     return window.btoa((window as any).encodeURIComponent(str));
 }
 // decode base64
 function fromBase64(str: string): string {
-    if (utils._isUndef(window.atob)) {
-        utils._throwError("window.atob is not defined");
+    if (_isUndef(window.atob)) {
+        _throwError("window.atob is not defined");
     }
     return (window as any).decodeURIComponent(window.atob(str));
 }
@@ -119,7 +123,7 @@ function toFormatDate(fmt: string, date: Date | number | string): string {
             date = date.trim();
             date = date.replace(/\/Date\((\d+)\)\//g, "$1"); // "/Date(1519700193000)/"
             // "1519700193000" -> 1519700193000
-            date = utils._isNumber(date) ? date : +date;
+            date = _isNumber(date) ? date : +date;
         } else if (typeof date == "number") {
             date = isNaN(date) ? 0 : date;
         } else {
@@ -201,12 +205,12 @@ function toByte(str: string): number {
 
 // ********************Vue comp import and export*********************
 let compLoadEv = document.createEvent("CustomEvent"); // 为了兼容IE11
-utils._defineProp(window, "_export", function (data: any) {
+_defineProp(window, "_export", function (data: any) {
     (window as any).vueComponent = data; // 为了兼容IE11
     compLoadEv.initCustomEvent("comploaded", true, true, data);
     document.dispatchEvent(compLoadEv);
 });
-utils._defineProp(window, "_import", function (callback: any) {
+_defineProp(window, "_import", function (callback: any) {
     document.addEventListener("comploaded", function (this: any) {
         callback && callback((window as any).vueComponent); // 为了兼容IE11
         (window as any).vueComponent = null; // 为了兼容IE11
@@ -327,12 +331,12 @@ class Yan {
         error = (_: any) => { }
     }) {
 
-        if (utils._isUndef(Promise)) {
-            utils._throwError("Your browser didn't support 'Promise'");
+        if (_isUndef(Promise)) {
+            _throwError("Your browser didn't support 'Promise'");
             return;
         }
         // 1
-        let xhr = !utils._isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new (window as any).ActiveXObjcet('Microsoft.XMLHTTP'));
+        let xhr = !_isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new (window as any).ActiveXObjcet('Microsoft.XMLHTTP'));
         // async
         return new Promise((resolve, reject) => {
 
@@ -408,7 +412,7 @@ class Yan {
     }
     // JSONP
     getJSON(url: string, data: object, success: Function, error: Function) {
-        if (utils._isFunc(data)) { // url,success
+        if (_isFunc(data)) { // url,success
             success = arguments[1];
             error = arguments[2];
         } else { // url,data,success
@@ -437,8 +441,8 @@ class Yan {
     }
     http2(config: any) {
         // detect axios exist
-        if (utils._isUndef(axios)) {
-            utils._throwError("This library relies on axios");
+        if (_isUndef(axios)) {
+            _throwError("This library relies on axios");
             return 0;
         }
         // 没有参数
@@ -446,8 +450,8 @@ class Yan {
             return 0;
         }
         // 参数类型不是对象时或参数不能为空对象
-        if (utils._getVarType(config) != "Object" || Object.keys(config).length == 0) {
-            utils._throwError("参数类型不是对象或为空对象");
+        if (_getVarType(config) != "Object" || Object.keys(config).length == 0) {
+            _throwError("参数类型不是对象或为空对象");
             return 0;
         }
         let that = this;
@@ -506,7 +510,7 @@ class Yan {
             .catch(function (err) {
                 config.complete && config.complete();
                 if (err != "Cancel") { // 取消请求信息不打印
-                    if (utils._isFunc(config.error) && that.ajaxCommon.setting.isDoErrorCallback) {
+                    if (_isFunc(config.error) && that.ajaxCommon.setting.isDoErrorCallback) {
                         config.error(err);
                     } else {
                         console.error(err);

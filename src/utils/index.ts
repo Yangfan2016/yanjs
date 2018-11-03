@@ -81,3 +81,7 @@ export function _extendPrototype(o: any, key: string, val: any): void {
 export function _throwError(msg: string): never {
     throw new Error(msg);
 }
+
+export function _forEach(context: object, callback: Function): Function {
+    return [].forEach.call(context, callback);
+}
