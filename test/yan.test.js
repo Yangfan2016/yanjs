@@ -1,4 +1,4 @@
-var yan = require("../dist/yan.min.js").yan;
+var yan = require("../dist/yan.min.js");
 var expect = require("chai").expect;
 
 

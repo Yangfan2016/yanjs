@@ -2,11 +2,12 @@
   "name": "yanjs",
   "version": "3.0.1",
   "description": "This is just a common toolkit for the Front End",
-  "main": "dist/yan.min.js",
+  "main": "./dist/yan.min.js",
+  "module": "./dist/yan.es.js",
   "scripts": {
-    "build": "webpack --progress --config webpack.config.js",
+    "build": "rollup --config rollup.config.js",
     "clean": "rm -rf node_modules/",
-    "test": "jest test/yan.test.js --coverage",
+    "test": "jest test/yan.test.js --config ./jest.config.js",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
@@ -22,17 +23,21 @@
     "axios": "^0.18.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "babel-loader": "^8.0.2",
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-external-helpers": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
     "chai": "^4.1.2",
+    "core-js": "^2.5.7",
     "coveralls": "^3.0.2",
-    "es6-promise": "^4.2.5",
     "jest": "^23.6.0",
-    "ts-loader": "^5.1.1",
-    "typescript": "^3.0.3",
-    "webpack": "^4.17.2",
-    "webpack-cli": "^3.1.0"
+    "rollup": "^0.66.6",
+    "rollup-plugin-babel": "^4.0.3",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-terser": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.17.2",
+    "typescript": "^3.1.5"
   },
   "author": "Yangfan",
   "license": "MIT",
