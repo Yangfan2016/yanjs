@@ -234,11 +234,35 @@ describe("browser", function () {
             .an("boolean")
     });
 
-    it("browserDetail", function () {
-        expect(yan.browserDetail)
+    it("browserDetail default", function () {
+        expect(yan.browserDetail())
             .to
             .have
             .ownProperty("name")
+    });
+    it("browserDetail Edge", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134"))
+            .to
+            .deep
+            .equal({ name: "Edge", version: "17.17134" })
+    });
+    it("browserDetail Chrome", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"))
+            .to
+            .deep
+            .equal({ name: "Chrome", version: "70.0.3538.77" })
+    });
+    it("browserDetail Firefox", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0"))
+            .to
+            .deep
+            .equal({ name: "Firefox", version: "63.0" })
+    });
+    it("browserDetail Safari", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.21 (KHTML, like Gecko) Mwendo/1.1.5 Safari/537.21"))
+            .to
+            .deep
+            .equal({ name: "Safari", version: "537.21" })
     });
 });
 
@@ -246,6 +270,16 @@ describe("ajax", function () {
     it("get", function () {
         expect(yan.http({
             url: "/api"
+        }))
+            .to
+            .be
+            .an
+            .instanceof(Promise);
+    });
+    it("post", function () {
+        expect(yan.http({
+            url: "/api",
+            method: "POST",
         }))
             .to
             .be

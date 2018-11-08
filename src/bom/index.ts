@@ -1,10 +1,8 @@
+interface iBrowser {
+    name: string,
+    version: string,
+}
 
-/**
- * filter html element tag
- * 
- * @param {String} str 
- * @returns {String}
- */
 export function filterHTML(str: string): string {
     return (str + "").replace(/<\/?([^>]\s?)+>/g, "").trim().replace(/\n|\r|\t/g, "");
 }
@@ -12,29 +10,36 @@ export function filterHTML(str: string): string {
 // browser
 export let browser = {
     isIE: !!(window as any).ActiveXObject || "ActiveXObject" in window,
-    detail: (function () {
+    detail(userAgent?: string): iBrowser {
         let ua = window.navigator.userAgent.toLowerCase();
-        let browser = {};
-        let arrMatch: string[] | null;
+        if (userAgent) {
+            ua = userAgent.toLowerCase();
+        }
+        let browser = { name: "unknown", version: "0.0" };
+        let strageMode = {
+            "IE": /msie ([\d\.]+)/,
+            "Edge": /edge\/([0-9\._]+)/,
+            "Opera": /opr\/([\d\.]+)/,
+            "Firefox": /firefox\/([\d\.]+)/,
+            "Safari": /version\/([\d\.]+).*safari/,
+            "Chrome": /chrome\/([\d\.]+)/,
+            "Phantomjs": /phantomjs\/([\d\.]+)/,
+            "jsdom": /jsdom\/([\d\.]+)/,
+        };
+
         // IE11
-        (!~navigator.userAgent.indexOf("MSIE") && ("ActiveXObject" in window)) ? (browser = { name: 'ie', version: '11' }) :
-            // IE10-    
-            (arrMatch = ua.match(/msie ([\d\.]+)/)) ? (browser = { name: 'ie', version: arrMatch[1] }) :
-                // Opera        
-                (arrMatch = ua.match(/opr\/([\d\.]+)/)) ? (browser = { name: 'opera', version: arrMatch[1] }) :
-                    // Firefox            
-                    (arrMatch = ua.match(/firefox\/([\d\.]+)/)) ? (browser = { name: 'firefox', version: arrMatch[1] }) :
-                        // Safari       
-                        (arrMatch = ua.match(/version\/([\d\.]+).*safari/)) ? (browser = { name: 'safari', version: arrMatch[1] }) :
-                            // Chrome                    
-                            (arrMatch = ua.match(/chrome\/([\d\.]+)/)) ? (browser = { name: 'chrome', version: arrMatch[1] }) :
-                                // Phantomjs                        
-                                (arrMatch = ua.match(/phantomjs\/([\d\.]+)/)) ? (browser = { name: 'phantomjs', version: arrMatch[1] }) :
-                                    // jsdom    
-                                    (arrMatch = ua.match(/jsdom\/([\d\.]+)/)) ? (browser = { name: 'jsdom', version: arrMatch[1] }) :
-                                        0;
+        if (!~ua.indexOf("msie") && ("ActiveXObject" in window)) {
+            return { name: 'IE', version: '11' };
+        }
+
+        for (let name in strageMode) {
+            let res = ua.match(strageMode[name]);
+            if (res !== null) {
+                return { name, version: res[1] };
+            }
+        }
         return browser;
-    }()),
+    },
     isSupportCss: function (prop: any): boolean {
         // convert str to camelCase
         if (!prop) return false;
