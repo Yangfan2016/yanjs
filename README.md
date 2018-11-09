@@ -1,5 +1,5 @@
-## yanjs 
-![NPM version](https://img.shields.io/npm/v/yanjs.svg?style=flat) 
+## yanjs   
+[![NPM version](https://img.shields.io/npm/v/yanjs.svg?style=flat)](https://www.npmjs.com/package/yanjs) 
 [![Build Status](https://travis-ci.org/Yangfan2016/yanjs.svg?branch=master)](https://travis-ci.org/Yangfan2016/yanjs)
 [![Coverage Status](https://coveralls.io/repos/github/Yangfan2016/yanjs/badge.svg?branch=master)](https://coveralls.io/github/Yangfan2016/yanjs?branch=master)
 
