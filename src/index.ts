@@ -186,9 +186,9 @@ function toByte(str: string): number {
     let unit: any = {
         'B': 1,
         'K': 1024,
-        'M': 1024*1024,
-        'G': 1024*1024*1024,
-        'T': 1024*1024*1024*1024,
+        'M': 1024 * 1024,
+        'G': 1024 * 1024 * 1024,
+        'T': 1024 * 1024 * 1024 * 1024,
     };
     return +str.toUpperCase().replace(/^(\d+)([B|K|M|G|T]){1}$/g, function (all, s1, s2) {
         return s1 * unit[s2] + "";
@@ -429,7 +429,7 @@ class Yan {
             error && error("JSONP is failed");
             jsonp.remove();
         });
-        jsonp.src = url + '&callback=' + cb;
+        jsonp.src = url.slice(-1) === "?" ? `${url}$callback=${cb}` : `${url}?callback=${cb}`;
     }
     http2(config: any) {
         // detect axios exist

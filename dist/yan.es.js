@@ -71,7 +71,7 @@ let browser = {
         };
         // IE11
         if (!~ua.indexOf("msie") && ("ActiveXObject" in window)) {
-            return { name: 'ie', version: '11' };
+            return { name: 'IE', version: '11' };
         }
         for (let name in strageMode) {
             let res = ua.match(strageMode[name]);
@@ -542,7 +542,7 @@ class Yan {
             error && error("JSONP is failed");
             jsonp.remove();
         });
-        jsonp.src = url + '&callback=' + cb;
+        jsonp.src = url.slice(-1) === "?" ? `${url}$callback=${cb}` : `${url}?callback=${cb}`;
     }
     http2(config) {
         // detect axios exist

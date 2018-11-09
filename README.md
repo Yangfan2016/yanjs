@@ -88,7 +88,7 @@ yan.http2({
   error:function (err) {}
 });
 // jsonp
-yan.http2.getJSON("yangfan.com/get",{
+yan.getJSON("yangfan.com/get",{
   name:"jobs",
   age:100
 },success:function (data) {},

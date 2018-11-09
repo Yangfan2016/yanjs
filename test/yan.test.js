@@ -1,7 +1,6 @@
 var yan = require("../dist/yan.min.js");
 var expect = require("chai").expect;
 
-
 describe("urlParse", function () {
     var url = 'https://abc.com:8080/user/info?name=yangfan&id=123456#top';
     var res = yan.urlParse(url);
@@ -258,16 +257,61 @@ describe("browser", function () {
             .deep
             .equal({ name: "Firefox", version: "63.0" })
     });
-    it("browserDetail Safari", function () {
-        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.21 (KHTML, like Gecko) Mwendo/1.1.5 Safari/537.21"))
+    it("browserDetail Safari Windows", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/534.57.2 (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2"))
             .to
             .deep
-            .equal({ name: "Safari", version: "537.21" })
+            .equal({ name: "Safari", version: "5.1.7" })
+    });
+    it("browserDetail Safari Mac OS", function () {
+        expect(yan.browserDetail("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15"))
+            .to
+            .deep
+            .equal({ name: "Safari", version: "12.0" })
     });
 });
 
 describe("ajax", function () {
-    it("get", function () {
+    it("axios:get", function () {
+        expect(yan.http2({
+            url: "/api"
+        }))
+            .to
+            .has
+            .ownProperty("cancel");
+    });
+    it("axios:post", function () {
+        expect(yan.http2({
+            url: "/api",
+            method: "POST",
+        }))
+            .to
+            .has
+            .ownProperty("cancel");
+    });
+    it("jsonp (url)", function () {
+        expect(yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/?callback=jsonpCb"))
+    });
+    it("jsonp (url,success)", function () {
+        yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/",function (data) {
+            expect(data)
+            .to
+            .be
+            .instanceOf(Object);
+        });
+    });
+    it("jsonp (url,data,success)", function () {
+        yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/", {
+            name: "jobs",
+            age: 100,
+        },function (data) {
+            expect(data)
+            .to
+            .be
+            .instanceOf(Object);
+        })
+    });
+    it("native xhr:get", function () {
         expect(yan.http({
             url: "/api"
         }))
@@ -276,7 +320,7 @@ describe("ajax", function () {
             .an
             .instanceof(Promise);
     });
-    it("post", function () {
+    it("native xhr:post", function () {
         expect(yan.http({
             url: "/api",
             method: "POST",
