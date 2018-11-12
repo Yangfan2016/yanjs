@@ -290,25 +290,31 @@ describe("ajax", function () {
             .ownProperty("cancel");
     });
     it("jsonp (url)", function () {
-        expect(yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/?callback=jsonpCb"))
+        window.jsonpCb = function (data) {
+            expect(data)
+                .to
+                .be
+                .instanceOf(Object);
+        }
+        yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/?callback=jsonpCb");
     });
     it("jsonp (url,success)", function () {
-        yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/",function (data) {
+        yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/", function (data) {
             expect(data)
-            .to
-            .be
-            .instanceOf(Object);
+                .to
+                .be
+                .instanceOf(Object);
         });
     });
     it("jsonp (url,data,success)", function () {
         yan.getJSON("http://cache.video.iqiyi.com/jp/avlist/202861101/1/", {
             name: "jobs",
             age: 100,
-        },function (data) {
+        }, function (data) {
             expect(data)
-            .to
-            .be
-            .instanceOf(Object);
+                .to
+                .be
+                .instanceOf(Object);
         })
     });
     it("native xhr:get", function () {
@@ -329,5 +335,31 @@ describe("ajax", function () {
             .be
             .an
             .instanceof(Promise);
+    });
+});
+
+describe("cookie", function () {
+    let expiresTimeStamp = new Date(Date.now() + 865 * 5);
+    it("set and get", function () {
+        yan.docCookie.set("TEST", "666", {
+            expires: expiresTimeStamp,
+        });
+        expect(yan.docCookie.get("TEST"))
+            .to
+            .be
+            .equal("666");
+    });
+    it("has", function () {
+        expect(yan.docCookie.has("TEST"))
+            .to
+            .be
+            .equal(true);
+    });
+    it("remove", function () {
+        yan.docCookie.remove("TEST");
+        expect(yan.docCookie.has("TEST"))
+            .to
+            .be
+            .equal(false);
     });
 });

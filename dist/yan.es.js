@@ -106,49 +106,50 @@ let browser = {
         return cache == "1vw";
     }
 };
-// cookie
+// docCookie
 let docCookie = {
-    getItem: function (sKey) {
-        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+    has(key) {
+        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(key).replace(/[-.+*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
     },
-    setItem: function (sKey, sValue, { end, path, domain, isSecure }) {
-        if (!sKey || /^(?:expires|max\-age|path|domain|secure)$/i.test(sKey)) {
+    get(key) {
+        return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*" + encodeURIComponent(key).replace(/[-.+*]/g, "\\$&") + "\\s*\\=\\s*([^;]*).*$)|^.*$"), "$1")) || null;
+    },
+    set(key, val, { expires, path, domain, isSecure }) {
+        if (!key || /^(?:expires|max-age|path|domain|secure)$/i.test(key)) {
             return false;
         }
         let sExpires = "";
-        if (end) {
-            switch (end.constructor) {
+        if (expires) {
+            switch (expires.constructor) {
                 case Number:
-                    sExpires = end === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + end;
+                    sExpires = expires === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; max-age=" + expires;
                     break;
                 case String:
-                    sExpires = "; expires=" + end;
+                    sExpires = "; expires=" + expires;
                     break;
                 case Date:
-                    sExpires = "; expires=" + end.toUTCString();
+                    sExpires = "; expires=" + expires.toUTCString();
                     break;
             }
         }
-        document.cookie = encodeURIComponent(sKey) + "=" + encodeURIComponent(sValue) + sExpires + (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "") + (isSecure ? "; secure" : "");
+        // json
+        if (typeof val === 'object' && val !== null) {
+            val = JSON.stringify(val);
+        }
+        document.cookie = encodeURIComponent(key) + "=" + encodeURIComponent(val) + sExpires + (domain ? "; domain=" + domain : "") + (path ? "; path=" + path : "") + (isSecure ? "; secure" : "");
         return true;
     },
-    removeItem: function (sKey, sPath, sDomain) {
-        if (!sKey || !this.hasItem(sKey)) {
+    remove(key, options = {
+        path: "",
+        domain: "",
+    }) {
+        let { path, domain } = options;
+        if (!key || !this.has(key)) {
             return false;
         }
-        document.cookie = encodeURIComponent(sKey) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + (sDomain ? "; domain=" + sDomain : "") + (sPath ? "; path=" + sPath : "");
+        document.cookie = encodeURIComponent(key) + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT" + "; domain=" + domain + "; path=" + path;
         return true;
     },
-    hasItem: function (sKey) {
-        return (new RegExp("(?:^|;\\s*)" + encodeURIComponent(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie);
-    },
-    keys: /* optional method: you can safely remove it! */ function () {
-        let aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, "").split(/\s*(?:\=[^;]*)?;\s*/);
-        for (let nIdx = 0; nIdx < aKeys.length; nIdx++) {
-            aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
-        }
-        return aKeys;
-    }
 };
 
 // serialize data  e.g. {a:"abc",b:"123"} -> "a=abc&b=123"

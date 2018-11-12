@@ -62,15 +62,18 @@ yan.urlParse("http://yanfan.com:83/home/disc/test.html#query?name=yan&age=100");
 - 获取、设置、删除cookie
 ```js
 // 判断是否存在此cookie
-yan.docCookie.hasItem("user_id");
+yan.docCookie.has("user_id");
 // 设置
-yan.docCookie.setItem("user_id", "12fdsa4f4a", new Date(2018,12,31), "/blog", ".yangfan.com", true);
+yan.docCookie.set("user_id", "12fdsa4f4a", {
+  expires:new Date(2018,12,31), 
+  path:"/blog", 
+  domain:".yangfan.com",
+  isSecure: true
+});
 // 获取
-yan.docCookie.getItem("user_id");
+yan.docCookie.get("user_id");
 // 删除
-yan.docCookie.removeItem("user_id","/blog",".yangfan.com");
-// 返回一个这个路径所有可读的cookie的数组
-yan.docCookie.keys();
+yan.docCookie.remove("user_id");
 
 ```
 
@@ -105,11 +108,10 @@ yan.browserDetail; // {name: "chrome", version: "69.0.3497.100"}
 
 #### 完整配置
 
-> `yan.docCookie.keys()`  
-`yan.docCookie.hasItem(name)`  
-`yan.docCookie.getItem(name)`  
-`yan.docCookie.setItem(name, value[, end[, path[, domain[, secure]]]])`  
-`yan.docCookie.removeItem(name[, path], domain)`  
+> `yan.docCookie.has(key)`  
+`yan.docCookie.get(key)`  
+`yan.docCookie.set(key, val[,{ expires, path, domain, isSecure }])`  
+`yan.docCookie.remove(key[,{ path, domain }])`  
 <table style="width:100%">
   <thead>
     <tr>
@@ -120,18 +122,18 @@ yan.browserDetail; // {name: "chrome", version: "69.0.3497.100"}
   </thead>
   <tbody>
     <tr>
-      <td>name</td>
+      <td>key</td>
       <td>String</td>
       <td>cookie名</td>
     </tr>
     <tr>
-      <td>value</td>
+      <td>val</td>
       <td>String</td>
       <td>cookie值</td>
     </tr>
     <tr>
-      <td>end</td>
-      <td>Date|String</td>
+      <td>expires</td>
+      <td>Date|String(UTC)</td>
       <td>过期时间</td>
     </tr>
     <tr>
@@ -145,7 +147,7 @@ yan.browserDetail; // {name: "chrome", version: "69.0.3497.100"}
       <td>默认为当前文档位置的路径的域名部分</td>
     </tr>
     <tr>
-      <td>secure</td>
+      <td>isSecure</td>
       <td>Boolean</td>
       <td>cookie只会被https传输</td>
     </tr>
@@ -154,7 +156,7 @@ yan.browserDetail; // {name: "chrome", version: "69.0.3497.100"}
 
 
 `yan.http2({url[ ,method[ ,data[ ,responseType[ ,success[ ,error[ ,isAuth[ ,cancelToken[ ,timeout]]]]]]]]})`
-`yan.$http.getJSON(url,data,success,error);`
+`yan.getJSON(url,data,success,error);`
 <table style="width:100%">
   <thead>
     <tr>
