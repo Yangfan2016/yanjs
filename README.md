@@ -3,8 +3,7 @@
 [![Build Status](https://travis-ci.org/Yangfan2016/yanjs.svg?branch=master)](https://travis-ci.org/Yangfan2016/yanjs)
 [![Coverage Status](https://coveralls.io/repos/github/Yangfan2016/yanjs/badge.svg?branch=master)](https://coveralls.io/github/Yangfan2016/yanjs?branch=master)
 
-> This is just a common toolkit for the Front End  
-此库仅仅是聚合了一些常用的前端公共方法
+> This is a tiny common toolkit for the Front End  
 
 ### Installation
 ```bash

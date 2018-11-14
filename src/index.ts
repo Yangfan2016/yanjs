@@ -22,27 +22,31 @@ function _serialize(data: any, isTraditional: boolean = false): string {
     }
     return '';
 }
+/**
+ * reverse serialize data  e.g. "a=abc&b=123" -> {"a":"abc","b":"123"}
+ * @param {string} str 
+ * @param {boolean} isTraditional if true e.g. "a=abc&b=123&b=456" -> {"a":"abc","b":["123","456"]}
+ */
+function _reSerialize(str: string, isTraditional = true): object {
+    let s = decodeURIComponent(str);
 
-// reverse serialize data  e.g. "a=abc%20%&b=123" -> {"a":"abc","b":"123"}
-function _reSerialize(str: string): object {
-    if (str.trim().length == 0) return {};
-    let arr = str.split("&");
-    let data: any = {};
-    arr.forEach(function (item) {
-        let brr = item.split("=");
-        if (!data[brr[0]]) {
-            data[brr[0]] = decodeURIComponent(brr[1]);
-        } else {
-            var old = data[brr[0]];
-            var nen = decodeURIComponent(brr[1]);
-            if (utils._isArray(old)) {
-                data[brr[0]].push(nen);
+    return s.split("&").reduce(function (prev, cur) {
+        let flag = cur.indexOf("=");
+        let key = cur.slice(0, flag);
+        let val = cur.slice(flag + 1);
+
+        if (isTraditional) {
+            if (prev[key]) {
+                prev[key] instanceof Array ? prev[key].push(val) : prev[key] = [prev[key], val];
             } else {
-                data[brr[0]] = [old, nen];
+                prev[key] = val;
             }
+        } else {
+            prev[key] = val;
         }
-    });
-    return data;
+
+        return prev;
+    }, {});
 }
 
 // extends

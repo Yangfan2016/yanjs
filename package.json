@@ -3,11 +3,11 @@
   "version": "3.0.2",
   "description": "This is just a common toolkit for the Front End",
   "main": "./dist/yan.min.js",
-  "module": "./dist/yan.es.js",
+  "module": "./dist/yan.esm.js",
   "scripts": {
     "build": "rollup --config rollup.config.js",
     "clean": "rm -rf node_modules/",
-    "test": "jest test/yan.test.js --config ./jest.config.js",
+    "test": "jest test/yan.test.js --config ./jest.config.js --detectOpenHandles",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
