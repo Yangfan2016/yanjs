@@ -1,4 +1,4 @@
-interface iBrowser {
+interface IBrowser {
     name: string,
     version: string,
 }
@@ -10,7 +10,7 @@ export function filterHTML(str: string): string {
 // browser
 export let browser = {
     isIE: !!(window as any).ActiveXObject || "ActiveXObject" in window,
-    detail(userAgent?: string): iBrowser {
+    detail(userAgent?: string): IBrowser {
         let ua = window.navigator.userAgent.toLowerCase();
         if (userAgent) {
             ua = userAgent.toLowerCase();

@@ -2,6 +2,14 @@ import axios from "../node_modules/axios/dist/axios.min.js";
 import * as utils from "./utils/index";
 import { browser, docCookie } from "./bom/index";
 
+declare global {
+    interface Window {
+        vueComponent: any,
+        ActiveXObjcet: any,
+        cancelAllXHR: any,
+    }
+}
+
 // serialize data  e.g. {a:"abc",b:"123"} -> "a=abc&b=123"
 function _serialize(data: any, isTraditional: boolean = false): string {
     let arr = [];
@@ -80,18 +88,18 @@ function toBase64(str: string): string {
     if (utils._isUndef(window.btoa)) {
         utils._throwError("window.btoa is not defined");
     }
-    return window.btoa((window as any).encodeURIComponent(str));
+    return btoa(encodeURIComponent(str));
 }
 // decode base64
 function fromBase64(str: string): string {
     if (utils._isUndef(window.atob)) {
         utils._throwError("window.atob is not defined");
     }
-    return (window as any).decodeURIComponent(window.atob(str));
+    return decodeURIComponent(atob(str));
 }
 // 千分位转换法 123456->123,456
 function toThousands(num: number): string {
-    if ((num as any).length < 3) return num.toString();
+    if (("" + num).length < 3) return num.toString();
     var res = num.toLocaleString("en-US");
     if (/(,\d{3})+/.test(res)) { // 方案1
         return res;
@@ -202,14 +210,14 @@ function toByte(str: string): number {
 // ********************Vue comp import and export*********************
 let compLoadEv = document.createEvent("CustomEvent"); // 为了兼容IE11
 utils._defineProp(window, "_export", function (data: any) {
-    (window as any).vueComponent = data; // 为了兼容IE11
+    window.vueComponent = data; // 为了兼容IE11
     compLoadEv.initCustomEvent("comploaded", true, true, data);
     document.dispatchEvent(compLoadEv);
 });
 utils._defineProp(window, "_import", function (callback: any) {
     document.addEventListener("comploaded", function (this: any) {
-        callback && callback((window as any).vueComponent); // 为了兼容IE11
-        (window as any).vueComponent = null; // 为了兼容IE11
+        callback && callback(window.vueComponent); // 为了兼容IE11
+        window.vueComponent = null; // 为了兼容IE11
         this.removeEventListener("comploaded", arguments.callee);
     }, false);
 });
@@ -332,7 +340,7 @@ class Yan {
             return;
         }
         // 1
-        let xhr = !utils._isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new (window as any).ActiveXObjcet('Microsoft.XMLHTTP'));
+        let xhr = !utils._isUndef(XMLHttpRequest) ? (new XMLHttpRequest()) : (new window.ActiveXObjcet('Microsoft.XMLHTTP'));
         // async
         return new Promise((resolve, reject) => {
 
@@ -422,7 +430,7 @@ class Yan {
         jsonp.type = "text/javascript";
         document.body.appendChild(jsonp);
 
-        (window as any)[cb] = function (d: any) {
+        window[cb] = function (d: any) {
             success && success(d);
         };
 
@@ -470,10 +478,10 @@ class Yan {
         config.headers = config.headers || {};
 
         // CANCEL REQUEST
-        let source2 = (axios as any).CancelToken.source();
+        let source2 = axios.CancelToken.source();
         config.cancelToken = source2.token;
-        (this.ajaxCommon.http2.requestArr as any).push(source2);
-        (window as any).cancelAllXHR = this.ajaxCommon.http2.requestArr;
+        this.ajaxCommon.http2.requestArr.push(source2);
+        window.cancelAllXHR = this.ajaxCommon.http2.requestArr;
 
         if (config.cancelAllRequest && config.cancelAllRequest == true) {
             // 清空之前所有请求
@@ -498,7 +506,7 @@ class Yan {
         }
 
         // request
-        (axios as any)(config)
+        axios(config)
             .then(function (res) {
                 config.complete && config.complete();
                 config.success && config.success(res.data);

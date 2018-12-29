@@ -230,18 +230,18 @@ function toBase64(str) {
     if (_isUndef(window.btoa)) {
         _throwError("window.btoa is not defined");
     }
-    return window.btoa(window.encodeURIComponent(str));
+    return btoa(encodeURIComponent(str));
 }
 // decode base64
 function fromBase64(str) {
     if (_isUndef(window.atob)) {
         _throwError("window.atob is not defined");
     }
-    return window.decodeURIComponent(window.atob(str));
+    return decodeURIComponent(atob(str));
 }
 // 千分位转换法 123456->123,456
 function toThousands(num) {
-    if (num.length < 3)
+    if (("" + num).length < 3)
         return num.toString();
     var res = num.toLocaleString("en-US");
     if (/(,\d{3})+/.test(res)) { // 方案1
